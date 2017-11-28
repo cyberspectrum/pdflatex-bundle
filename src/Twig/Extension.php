@@ -64,6 +64,9 @@ class Extension extends AbstractExtension
      */
     public function texify($text)
     {
+        if (empty($text)) {
+            return $text;
+        }
         return $this->utils->parseText($text);
     }
 
@@ -76,6 +79,9 @@ class Extension extends AbstractExtension
      */
     public function texifyAll($text)
     {
+        if (empty($text)) {
+            return $text;
+        }
         return $this->utils->parseText($text, true);
     }
 }
