@@ -1,0 +1,18 @@
+#!/bin/bash
+
+OUTDIR=${PWD}
+for key in "$@"; do
+    case $key in
+        -output-directory=*)
+        OUTDIR="${key#*=}"
+        ;;
+        *)    # unknown option
+        ;;
+    esac
+done
+for file; do true; done
+
+pdf="${OUTDIR}/`basename ${file} .tex`.pdf"
+
+echo TEXINPUTS=${TEXINPUTS} > ${pdf}
+echo $@ >> ${pdf}

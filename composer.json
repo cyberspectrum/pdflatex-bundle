@@ -1,0 +1,51 @@
+{
+  "name": "cyberspectrum/pdflatex-bundle",
+  "description": "pdflatex bundle",
+  "keywords": [
+    "pdflatex",
+    "symfony"
+  ],
+  "type": "symfony-bundle",
+  "homepage": "http://www.cyberspectrum.de/",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Christian Schiffler",
+      "email": "c.schiffler@cyberspectrum.de",
+      "homepage": "http://www.cyberspectrum.de",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "info@cyberspectrum.de",
+    "issues": "https://github.com/cyberspectrum/pdflatex-bundle/issues",
+    "source": "https://github.com/cyberspectrum/pdflatex-bundle"
+  },
+  "require": {
+    "php": "^7.0",
+    "symfony/config": "^3.3",
+    "symfony/dependency-injection": "^3.3",
+    "symfony/filesystem": "^3.3",
+    "symfony/http-foundation": "^3.3",
+    "symfony/http-kernel": "^3.3"
+  },
+  "require-dev": {
+    "phpcq/all-tasks": "~1.2",
+    "twig/twig": "^2.4 | ^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "CyberSpectrum\\PdfLatexBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CyberSpectrum\\PdfLatexBundle\\Test\\": "tests/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+services:
+    cyberspectrum.pdflatex.executor_factory:
+        class: CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory
+        arguments:
+            - "%cyberspectrum.pdflatex.binary%"
+
+    cyberspectrum.pdflatex.processor:
+        class: CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor
+        arguments:
+            - "@cyberspectrum.pdflatex.executor_factory"
+            - "%kernel.cache_dir%/pdflatex"
+
+    cyberspectrum.pdflatex.twig.extension:
+        class: CyberSpectrum\PdfLatexBundle\Twig\Extension
+        tags:
+            - { name: twig.extension }
