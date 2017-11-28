@@ -114,21 +114,19 @@ class TextUtils
         'Š' => '\\v{S}',
         'Ø' => '{\\O}',
         'ø' => '{\\o}',
-        '&sup2;', '\\textsuperscript{2}',
-        '&sup3;', '\\textsuperscript{3}',
-        '²', '\\textsuperscript{2}',
-        '³', '\\textsuperscript{3}',
+        '²' => '\\textsuperscript{2}',
+        '³' => '\\textsuperscript{3}',
     ];
 
     /**
      * Parse the text and replace known special latex characters correctly
      *
-     * @param string  $text          The string that needs to be parsed.
-     * @param boolean $escapeNewLine If set, newline characters will be replaced by LaTeX entities (default false).
+     * @param string $text          The string that needs to be parsed.
+     * @param bool   $escapeNewLine If set, newline characters will be replaced by LaTeX entities (default false).
      *
-     * @return mixed
+     * @return string
      */
-    public function parseText($text, $escapeNewLine = false)
+    public function parseText(string $text, bool $escapeNewLine = false)
     {
         // Try to replace HTML entities
         $text = html_entity_decode($text, ENT_QUOTES, 'utf-8');

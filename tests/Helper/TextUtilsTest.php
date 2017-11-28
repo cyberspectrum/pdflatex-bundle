@@ -49,6 +49,14 @@ class TextUtilsTest extends TestCase
                 '\\backslash{}\\{\\}',
                 '\\{}',
             ],
+            'do not touch numeric' => [
+                '74889',
+                '74889',
+            ],
+            'superscript' => [
+                '\\textsuperscript{2}',
+                '&sup2;',
+            ],
         ];
     }
 
