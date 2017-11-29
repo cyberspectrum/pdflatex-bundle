@@ -60,7 +60,7 @@ class TextUtilsTest extends TestCase
     }
 
     /**
-     * Test the parseText() method
+     * Test the parseText() method.
      *
      * @param string $expected The expected result.
      * @param string $input    The input string.

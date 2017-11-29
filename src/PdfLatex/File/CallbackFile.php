@@ -63,7 +63,7 @@ class CallbackFile implements FileInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -71,7 +71,7 @@ class CallbackFile implements FileInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDirectory(): string
     {
@@ -79,7 +79,7 @@ class CallbackFile implements FileInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function saveTo(string $directory)
     {

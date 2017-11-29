@@ -69,7 +69,7 @@ class StreamedFile extends AbstractStreamedFile
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -77,7 +77,7 @@ class StreamedFile extends AbstractStreamedFile
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDirectory(): string
     {
@@ -85,7 +85,7 @@ class StreamedFile extends AbstractStreamedFile
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws \RuntimeException When anything goes wrong.
      */

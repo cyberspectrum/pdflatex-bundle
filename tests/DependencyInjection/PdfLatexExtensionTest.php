@@ -39,7 +39,7 @@ class PdfLatexExtensionTest extends TestCase
     private static $path;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function setUpBeforeClass()
     {
@@ -48,7 +48,7 @@ class PdfLatexExtensionTest extends TestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function tearDownAfterClass()
     {

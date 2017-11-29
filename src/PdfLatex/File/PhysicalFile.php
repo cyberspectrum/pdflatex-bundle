@@ -42,8 +42,8 @@ class PhysicalFile extends AbstractStreamedFile
     /**
      * Create a new instance.
      *
-     * @param string   $path      The file name.
-     * @param string   $directory The optional sub directory.
+     * @param string $path      The file name.
+     * @param string $directory The optional sub directory.
      *
      * @throws \InvalidArgumentException When an invalid path has been passed.
      */
@@ -58,7 +58,7 @@ class PhysicalFile extends AbstractStreamedFile
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName(): string
     {
@@ -66,7 +66,7 @@ class PhysicalFile extends AbstractStreamedFile
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getDirectory(): string
     {
@@ -74,13 +74,14 @@ class PhysicalFile extends AbstractStreamedFile
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws \RuntimeException When anything goes wrong.
      */
     public function saveTo(string $directory)
     {
         $source = \fopen($this->path, 'rb');
+
         try {
             $this->save($source, $directory);
         } finally {

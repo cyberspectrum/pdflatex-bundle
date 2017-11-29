@@ -96,6 +96,10 @@ class JobProcessorTest extends TestCase
     /**
      * Mock a file.
      *
+     * @param string $fileName The file name.
+     * @param string $subDir   The sub directory.
+     * @param string $saveDir  The destination directory.
+     *
      * @return FileInterface
      */
     private function mockFile($fileName, $subDir, $saveDir): FileInterface

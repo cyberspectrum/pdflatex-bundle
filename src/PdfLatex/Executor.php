@@ -99,7 +99,7 @@ class Executor
     /**
      * Run latex on the passed file and return the path to the PDF.
      *
-     * @param string|null $outputDirectory The optional output directory, if different than source directory.
+     * @param null|string $outputDirectory The optional output directory, if different than source directory.
      *
      * @return string
      */
@@ -132,10 +132,9 @@ class Executor
      *
      * @param string $optionsString The additional options.
      *
-     * @return bool
-     *
      * @throws LatexFailedException When the process exited non zero.
-     * @throws \RuntimeException When the process did not create a pdf file.
+     * @throws \RuntimeException    When the process did not create a pdf file.
+     * @return bool
      */
     private function latexPass($optionsString)
     {

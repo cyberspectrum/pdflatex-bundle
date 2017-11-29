@@ -43,7 +43,7 @@ class TempDirTestCase extends TestCase
     private $fileSystem;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function setUp()
     {
@@ -56,7 +56,7 @@ class TempDirTestCase extends TestCase
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function tearDown()
     {

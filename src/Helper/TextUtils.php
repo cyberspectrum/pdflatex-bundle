@@ -118,7 +118,7 @@ class TextUtils
     ];
 
     /**
-     * Parse the text and replace known special latex characters correctly
+     * Parse the text and replace known special latex characters correctly.
      *
      * @param string $text          The string that needs to be parsed.
      * @param bool   $escapeNewLine If set, newline characters will be replaced by LaTeX entities (default false).

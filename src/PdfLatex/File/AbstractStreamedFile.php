@@ -33,9 +33,8 @@ abstract class AbstractStreamedFile implements FileInterface
      * @param resource $source      The source stream.
      * @param string   $destination The destination directory.
      *
-     * @return void
-     *
      * @throws \RuntimeException When anything goes wrong.
+     * @return void
      */
     protected function save($source, string $destination)
     {

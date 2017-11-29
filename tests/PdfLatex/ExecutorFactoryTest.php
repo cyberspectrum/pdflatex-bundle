@@ -25,7 +25,7 @@ use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory;
 use CyberSpectrum\PdfLatexBundle\Test\TempDirTestCase;
 
 /**
- * This tests the ExecutorFactory
+ * This tests the ExecutorFactory.
  */
 class ExecutorFactoryTest extends TempDirTestCase
 {

@@ -33,7 +33,7 @@ use Symfony\Component\Process\ExecutableFinder;
 class PdfLatexExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -51,9 +51,8 @@ class PdfLatexExtension extends Extension
     /**
      * Find the default pdflatex binary.
      *
-     * @return string
-     *
      * @throws RuntimeException When the processor could not be found.
+     * @return string
      */
     private function getDefaultBinary(): string
     {

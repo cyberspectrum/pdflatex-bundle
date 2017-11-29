@@ -48,9 +48,8 @@ interface FileInterface
      *
      * @param string $directory The directory to save to.
      *
-     * @return void
-     *
      * @throws \RuntimeException When anything goes wrong.
+     * @return void
      */
     public function saveTo(string $directory);
 }

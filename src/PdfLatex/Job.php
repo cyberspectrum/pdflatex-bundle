@@ -125,9 +125,8 @@ class Job
      *
      * @param string $path The path to add.
      *
-     * @return Job
-     *
      * @throws \InvalidArgumentException When the path does not exist.
+     * @return Job
      */
     public function addIncludePath(string $path): Job
     {
