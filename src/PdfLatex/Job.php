@@ -103,7 +103,7 @@ class Job
      *
      * @return Job
      */
-    public function addAsset(FileInterface $asset): Job
+    public function addAsset(FileInterface $asset): self
     {
         $this->assets[] = $asset;
 
@@ -128,7 +128,7 @@ class Job
      * @throws \InvalidArgumentException When the path does not exist.
      * @return Job
      */
-    public function addIncludePath(string $path): Job
+    public function addIncludePath(string $path): self
     {
         $realPath = realpath($path);
         if ((null === $realPath) || !is_dir($realPath)) {

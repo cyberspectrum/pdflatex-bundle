@@ -101,6 +101,6 @@ class PhysicalFileTest extends TempDirTestCase
         $file->saveTo($destDir);
 
         $this->assertFileExists($destFile);
-        $this->assertEquals('TESTING!', \file_get_contents($destFile));
+        $this->assertSame('TESTING!', \file_get_contents($destFile));
     }
 }
