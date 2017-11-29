@@ -25,6 +25,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * This tests the TextUtils class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\Helper\TextUtils
  */
 class TextUtilsTest extends TestCase
 {

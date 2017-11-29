@@ -29,6 +29,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * This tests the JobProcessor class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor
  */
 class JobProcessorTest extends TestCase
 {

@@ -26,6 +26,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * This tests the CallbackFile class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\PdfLatex\File\CallbackFile
  */
 class CallbackFileTest extends TestCase
 {

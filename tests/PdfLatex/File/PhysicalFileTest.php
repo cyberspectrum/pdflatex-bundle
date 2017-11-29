@@ -25,6 +25,8 @@ use CyberSpectrum\PdfLatexBundle\Test\TempDirTestCase;
 
 /**
  * This tests the PhysicalFile class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\PdfLatex\File\PhysicalFile
  */
 class PhysicalFileTest extends TempDirTestCase
 {

@@ -28,6 +28,8 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 
 /**
  * This tests the Configuration class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension
  */
 class PdfLatexExtensionTest extends TestCase
 {

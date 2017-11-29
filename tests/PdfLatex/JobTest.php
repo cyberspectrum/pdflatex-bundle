@@ -26,6 +26,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * This tests the PdfLatexJob.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\PdfLatex\Job
  */
 class JobTest extends TestCase
 {

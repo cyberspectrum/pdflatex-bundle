@@ -25,6 +25,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This test case provides means to handle temporary files.
+ *
+ * @coversNothing
  */
 class TempDirTestCase extends TestCase
 {

@@ -26,6 +26,8 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 
 /**
  * This tests the Configuration class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\DependencyInjection\Configuration
  */
 class ConfigurationTest extends TestCase
 {

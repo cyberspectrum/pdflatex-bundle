@@ -25,6 +25,8 @@ use CyberSpectrum\PdfLatexBundle\Test\TempDirTestCase;
 
 /**
  * This tests the streamed file class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\PdfLatex\File\StreamedFile
  */
 class StreamedFileTest extends TempDirTestCase
 {

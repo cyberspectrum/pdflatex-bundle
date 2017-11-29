@@ -27,6 +27,8 @@ use Symfony\Component\Process\ExecutableFinder;
 
 /**
  * This tests the PdfLatexExecutor class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\PdfLatex\Executor
  */
 class ExecutorTest extends TempDirTestCase
 {

@@ -25,6 +25,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * This tests the bundle class.
+ *
+ * @covers \CyberSpectrum\PdfLatexBundle\CyberSpectrumPdfLatexBundle
  */
 class CyberSpectrumPdfLatexBundleTest extends TestCase
 {
