@@ -125,6 +125,7 @@ class ExecutorTest extends TempDirTestCase
 
         if (null === ($binary = $finder->find('pdflatex'))) {
             $this->markTestSkipped('Could not find pdflatex');
+
             return;
         }
 

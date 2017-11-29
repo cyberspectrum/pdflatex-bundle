@@ -66,6 +66,7 @@ class Extension extends AbstractExtension
         if (empty($text)) {
             return $text;
         }
+
         return $this->utils->parseText($text);
     }
 
@@ -81,6 +82,7 @@ class Extension extends AbstractExtension
         if (empty($text)) {
             return $text;
         }
+
         return $this->utils->parseText($text, true);
     }
 }

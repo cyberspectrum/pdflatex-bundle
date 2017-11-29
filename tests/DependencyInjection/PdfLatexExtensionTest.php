@@ -91,8 +91,8 @@ class PdfLatexExtensionTest extends TestCase
         $extension->load(
             [
                 'cs_pdflatex' => [
-                    'pdflatex_binary' => '/bin/false'
-                ]
+                    'pdflatex_binary' => '/bin/false',
+                ],
             ],
             $container
         );

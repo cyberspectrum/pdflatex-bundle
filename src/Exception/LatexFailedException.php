@@ -50,7 +50,7 @@ class LatexFailedException extends RuntimeException
         }
 
         $error = sprintf(
-            'The command "%s" failed.'."\n\nExit Code: %s(%s)\n\nWorking directory: %s",
+            'The command "%s" failed.' . "\n\nExit Code: %s(%s)\n\nWorking directory: %s",
             $process->getCommandLine(),
             $process->getExitCode(),
             $process->getExitCodeText(),
@@ -89,6 +89,7 @@ class LatexFailedException extends RuntimeException
     {
         $output = $this->process->getOutput();
         $errors = $this->process->getErrorOutput();
+
         return str_replace(
             $this->process->getWorkingDirectory(),
             '',

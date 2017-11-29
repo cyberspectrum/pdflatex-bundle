@@ -109,8 +109,8 @@ class Executor
         $count   = 0;
 
         $compileOptions = [
-            'halt-on-error' => '',
-            'output-directory' => $outputDirectory ?: $this->directory
+            'halt-on-error'    => '',
+            'output-directory' => $outputDirectory ?: $this->directory,
         ];
 
         $optionsString = '';

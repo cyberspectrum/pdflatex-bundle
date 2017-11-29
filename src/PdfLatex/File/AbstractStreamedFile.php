@@ -40,6 +40,7 @@ abstract class AbstractStreamedFile implements FileInterface
     {
         if (!empty($directory = $this->getDirectory())) {
             $destination .= DIRECTORY_SEPARATOR . $directory;
+
             try {
                 $filesystem = new Filesystem();
                 $filesystem->mkdir($destination);
@@ -49,6 +50,7 @@ abstract class AbstractStreamedFile implements FileInterface
         }
 
         $target = \fopen($destination . DIRECTORY_SEPARATOR . $this->getName(), 'wb');
+
         try {
             \fseek($source, 0);
             while (!\feof($source)) {

@@ -94,6 +94,7 @@ class JobProcessor
             'Content-Disposition',
             'attachment;filename="' . basename($latexJob->getTexFile()->getName(), '.tex') . '.pdf"'
         );
+
         return $response;
     }
 }
