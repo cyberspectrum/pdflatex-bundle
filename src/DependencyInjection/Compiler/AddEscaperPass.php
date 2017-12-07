@@ -18,35 +18,28 @@
  */
 declare(strict_types = 1);
 
-namespace CyberSpectrum\PdfLatexBundle;
+namespace CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler;
 
-use CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler\AddEscaperPass;
-use CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler\SetAutoescapePass;
-use CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
- * This is the bundle.
+ * This adds the tex escaper to the escapers.
  */
-class CyberSpectrumPdfLatexBundle extends Bundle
+class AddEscaperPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainerExtension()
-    {
-        return new PdfLatexExtension();
-    }
-
     /**
      * {@inheritDoc}
      */
-    public function build(ContainerBuilder $container)
+    public function process(ContainerBuilder $container)
     {
-        parent::build($container);
+        // No twig? can not inject.
+        if (!$container->hasDefinition('twig')) {
+            return;
+        }
 
-        $container->addCompilerPass(new SetAutoescapePass());
-        $container->addCompilerPass(new AddEscaperPass());
+        $extension = $container->getDefinition('cyberspectrum.pdflatex.twig.extension');
+        $extension->addMethodCall('addEscaperTo', [new Reference('twig')]);
     }
 }

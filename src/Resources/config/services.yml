@@ -17,3 +17,9 @@ services:
         tags:
             - { name: twig.extension }
         public: false
+
+    cyberspectrum.pdflatex.twig.file_extension_escaping_strategy:
+        class: CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy
+        arguments:
+            - false
+        public: false

@@ -165,6 +165,7 @@ class PdfLatexExtensionTest extends TestCase
         $this->assertTrue($container->has('cyberspectrum.pdflatex.executor_factory'));
         $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
         $this->assertTrue($container->has('cyberspectrum.pdflatex.twig.extension'));
+        $this->assertTrue($container->has('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy'));
     }
 
     /**
@@ -186,5 +187,6 @@ class PdfLatexExtensionTest extends TestCase
         $this->assertFalse($container->has('cyberspectrum.pdflatex.executor_factory'));
         $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
         $this->assertFalse($container->has('cyberspectrum.pdflatex.twig.extension'));
+        $this->assertFalse($container->has('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy'));
     }
 }

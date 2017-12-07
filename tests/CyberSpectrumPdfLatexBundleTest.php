@@ -21,7 +21,10 @@ declare(strict_types = 1);
 namespace CyberSpectrum\PdfLatexBundle\Test;
 
 use CyberSpectrum\PdfLatexBundle\CyberSpectrumPdfLatexBundle;
+use CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler\AddEscaperPass;
+use CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler\SetAutoescapePass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * This tests the bundle class.
@@ -45,5 +48,33 @@ class CyberSpectrumPdfLatexBundleTest extends TestCase
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension',
             $bundle->getContainerExtension()
         );
+    }
+
+    /**
+     * Test that the compiler passes are registered.
+     *
+     * @return void
+     */
+    public function testRegistersCompilerPasses()
+    {
+        $bundle = new CyberSpectrumPdfLatexBundle();
+
+        $container = $this
+            ->getMockBuilder(ContainerBuilder::class)
+            ->setMethods(['addCompilerPass'])
+            ->getMock();
+
+        $container
+            ->expects($this->exactly(2))
+            ->method('addCompilerPass')->willReturnOnConsecutiveCalls(
+                $this->returnCallback(function ($pass) {
+                    $this->assertInstanceOf(SetAutoescapePass::class, $pass);
+                }),
+                $this->returnCallback(function ($pass) {
+                    $this->assertInstanceOf(AddEscaperPass::class, $pass);
+                })
+            );
+
+        $bundle->build($container);
     }
 }
