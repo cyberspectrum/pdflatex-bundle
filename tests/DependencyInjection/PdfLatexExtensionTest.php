@@ -166,4 +166,25 @@ class PdfLatexExtensionTest extends TestCase
         $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
         $this->assertTrue($container->has('cyberspectrum.pdflatex.twig.extension'));
     }
+
+    /**
+     * Test that the container can be compiled.
+     *
+     * @return void
+     */
+    public function testContainerCanBeCompiled()
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.cache_dir', '/does/not/exist');
+        putenv('PATH=' . (dirname(__DIR__) . '/fixtures'));
+
+        $extension = new PdfLatexExtension();
+        $extension->load([], $container);
+
+        $container->compile();
+
+        $this->assertFalse($container->has('cyberspectrum.pdflatex.executor_factory'));
+        $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
+        $this->assertFalse($container->has('cyberspectrum.pdflatex.twig.extension'));
+    }
 }
