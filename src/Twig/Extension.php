@@ -74,8 +74,11 @@ class Extension extends AbstractExtension
      *
      * @@SuppressWarnings(PHPMD.UnusedFormalParameter) - The interface is dictated by twig.
      */
-    public function escape(Environment $twig, string $string, string $charset)
+    public function escape(Environment $twig, string $string = null, string $charset = null)
     {
+        if (empty($string)) {
+            return $string;
+        }
         return $this->texifyAll($string);
     }
 
