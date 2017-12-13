@@ -91,7 +91,6 @@ class JobProcessorTest extends TestCase
 
         $processor = new JobProcessor($factory, '/working/base/dir');
 
-        /** @var JobProcessor $processor */
         $this->assertSame('/working/base/dir/jobdir/foo.pdf', $processor->process($job));
     }
 
