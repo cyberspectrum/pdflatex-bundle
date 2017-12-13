@@ -35,6 +35,9 @@
     "twig/twig": "^2.4 | ^3.0",
     "symfony/twig-bundle": "^3.3 | ^4.0"
   },
+  "conflict": {
+    "twig/twig": "<2.4"
+  },
   "autoload": {
     "psr-4": {
       "CyberSpectrum\\PdfLatexBundle\\": "src/"
