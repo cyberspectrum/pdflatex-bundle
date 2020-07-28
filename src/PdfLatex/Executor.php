@@ -113,17 +113,18 @@ class Executor
         $compileOptions = [
             'halt-on-error'    => '',
             'output-directory' => $outputDirectory ?: $this->directory,
+            'interaction'      => 'nonstopmode',
         ];
 
-        $optionsString = '';
+        $options = [];
         foreach ($compileOptions as $option => $value) {
-            $optionsString .= ' -' . escapeshellarg($option) . (($value) ? '=' . escapeshellarg($value) . ' ' : ' ');
+            $options[] = '-' . $option . (($value) ? '=' . $value : '');
         }
 
         // Compile until everything is ok or three times is reached.
         while ($compile && $count < 3) {
             ++$count;
-            $compile = $this->latexPass($optionsString);
+            $compile = $this->latexPass($options);
         }
 
         return $this->directory . DIRECTORY_SEPARATOR . $this->pdfFile;
@@ -132,22 +133,17 @@ class Executor
     /**
      * Run latex over the file and return true if another pass is needed.
      *
-     * @param string $optionsString The additional options.
+     * @param array $options The additional options.
      *
      * @return bool
      *
      * @throws RuntimeException     When the process did not create a pdf file.
      * @throws LatexFailedException When the process exited non zero.
      */
-    private function latexPass($optionsString)
+    private function latexPass(array $options): bool
     {
         $process = new Process(
-            sprintf(
-                '%s %s -interaction=nonstopmode %s',
-                escapeshellcmd($this->binary),
-                $optionsString,
-                escapeshellarg($this->texFile)
-            ),
+            array_merge([$this->binary], $options, $this->texFile),
             $this->directory
         );
         $process->setTimeout(60);
