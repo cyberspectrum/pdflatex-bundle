@@ -21,6 +21,8 @@ declare(strict_types = 1);
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex;
 
 use CyberSpectrum\PdfLatexBundle\Exception\LatexFailedException;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\Process\Process;
 
 /**
@@ -71,20 +73,20 @@ class Executor
      * @param string $texFile      The tex file name to process (relative to working directory).
      * @param array  $includePaths Additional include paths to be passed as TEXINPUTS environment variable.
      *
-     * @throws \InvalidArgumentException If the file name is not a .tex file or the input file does not exist.
+     * @throws InvalidArgumentException If the file name is not a .tex file or the input file does not exist.
      */
     public function __construct(string $binary, string $directory, string $texFile, array $includePaths)
     {
         if (!is_executable($binary)) {
-            throw new \InvalidArgumentException('File ' . $binary . ' is not executable.');
+            throw new InvalidArgumentException('File ' . $binary . ' is not executable.');
         }
 
         if ('.tex' !== substr($texFile, -4)) {
-            throw new \InvalidArgumentException('File ' . $texFile . ' does not have file extension ".tex".');
+            throw new InvalidArgumentException('File ' . $texFile . ' does not have file extension ".tex".');
         }
 
         if (!is_file($directory . DIRECTORY_SEPARATOR . $texFile)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'File ' . $directory . DIRECTORY_SEPARATOR . $texFile . ' does not exist.'
             );
         }
@@ -132,9 +134,10 @@ class Executor
      *
      * @param string $optionsString The additional options.
      *
-     * @throws LatexFailedException When the process exited non zero.
-     * @throws \RuntimeException    When the process did not create a pdf file.
      * @return bool
+     *
+     * @throws RuntimeException     When the process did not create a pdf file.
+     * @throws LatexFailedException When the process exited non zero.
      */
     private function latexPass($optionsString)
     {
@@ -155,7 +158,7 @@ class Executor
         }
 
         if (!is_file($this->directory . DIRECTORY_SEPARATOR . $this->pdfFile)) {
-            throw new \RuntimeException('pdflatex failed to produce pdf file.');
+            throw new RuntimeException('pdflatex failed to produce pdf file.');
         }
 
         return 0 < preg_match_all('/reference|change|no file /uim', $process->getOutput());
