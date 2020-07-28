@@ -23,6 +23,7 @@ namespace CyberSpectrum\PdfLatexBundle\Twig;
 use CyberSpectrum\PdfLatexBundle\Helper\TextUtils;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\EscaperExtension;
 use Twig\TwigFilter;
 
 /**
@@ -56,11 +57,9 @@ class Extension extends AbstractExtension
      */
     public function addEscaperTo(Environment $environment)
     {
-        $environment->getExtension('Twig\Extension\CoreExtension')->setEscaper('tex', [$this, 'escape']);
-        /** @var \Twig_Extension_Escaper $escaper */
-        $escaper    = $environment->getExtension('Twig\Extension\EscaperExtension');
-        $reflection = new \ReflectionProperty($escaper, 'defaultStrategy');
-        $reflection->setAccessible(true);
+        /** @var EscaperExtension $extension */
+        $extension = $environment->getExtension(EscaperExtension::class);
+        $extension->setEscaper('tex', [$this, 'escape']);
     }
 
     /**
