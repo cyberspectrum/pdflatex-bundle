@@ -143,7 +143,7 @@ class Executor
     private function latexPass(array $options): bool
     {
         $process = new Process(
-            array_merge([$this->binary], $options, $this->texFile),
+            array_merge([$this->binary], $options, [$this->texFile]),
             $this->directory
         );
         $process->setTimeout(60);
