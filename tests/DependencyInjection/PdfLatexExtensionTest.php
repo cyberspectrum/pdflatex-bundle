@@ -1,22 +1,5 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\DependencyInjection;
@@ -27,6 +10,10 @@ use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 
+use function dirname;
+use function getenv;
+use function putenv;
+
 /**
  * This tests the Configuration class.
  *
@@ -34,37 +21,23 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
  */
 class PdfLatexExtensionTest extends TestCase
 {
-    /**
-     * Keep $PATH environment.
-     *
-     * @var string
-     */
-    private static $path;
+    /** Keep $PATH environment. */
+    private static string $path;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$path = getenv('PATH');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         putenv('PATH=' . self::$path);
         parent::tearDownAfterClass();
     }
 
-    /**
-     * Test that the bundle can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the bundle can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension',
@@ -73,16 +46,12 @@ class PdfLatexExtensionTest extends TestCase
         $this->assertInstanceOf(Extension::class, $extension);
     }
 
-    /**
-     * Test that the extension uses path override.
-     *
-     * @return void
-     */
-    public function testLoadReturnsOverriddenPathToBinary()
+    /** Test that the extension uses path override. */
+    public function testLoadReturnsOverriddenPathToBinary(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['setParameter'])
+            ->onlyMethods(['setParameter'])
             ->getMock();
 
         $container
@@ -101,16 +70,12 @@ class PdfLatexExtensionTest extends TestCase
         );
     }
 
-    /**
-     * Test that the extension uses search path by default.
-     *
-     * @return void
-     */
-    public function testLoadReturnsBinaryFromSearchPath()
+    /** Test that the extension uses search path by default. */
+    public function testLoadReturnsBinaryFromSearchPath(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['setParameter'])
+            ->onlyMethods(['setParameter'])
             ->getMock();
 
         putenv('PATH=' . ($dir = dirname(__DIR__) . '/fixtures'));
@@ -124,16 +89,12 @@ class PdfLatexExtensionTest extends TestCase
         $extension->load([], $container);
     }
 
-    /**
-     * Test that the extension throws an exception when no pdflatex is found.
-     *
-     * @return void
-     */
-    public function testLoadThrowsExceptionWhenNoBinaryFound()
+    /** Test that the extension throws an exception when no pdflatex is found. */
+    public function testLoadThrowsExceptionWhenNoBinaryFound(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['setParameter'])
+            ->onlyMethods(['setParameter'])
             ->getMock();
 
         putenv('PATH=');

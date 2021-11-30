@@ -1,22 +1,5 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\DependencyInjection\Compiler;
@@ -35,12 +18,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class SetAutoescapePassTest extends TestCase
 {
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the compiler pass can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler\SetAutoescapePass',
@@ -48,16 +27,12 @@ class SetAutoescapePassTest extends TestCase
         );
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testAbstainsWithoutTwig()
+    /** Test that the compiler pass can be instantiated. */
+    public function testAbstainsWithoutTwig(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['getDefinition'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
         $container
@@ -69,12 +44,8 @@ class SetAutoescapePassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testAbstainsWhenAutoescapeIsString()
+    /** Test that the compiler pass can be instantiated. */
+    public function testAbstainsWhenAutoescapeIsString(): void
     {
         $twig = new Definition('\Twig\Class', ['loader', ['autoescape' => 'html']]);
 
@@ -88,12 +59,8 @@ class SetAutoescapePassTest extends TestCase
         $this->assertSame(['autoescape' => 'html'], $twig->getArgument(1));
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testInjectsWhenAutoescapeIsName()
+    /** Test that the compiler pass can be instantiated. */
+    public function testInjectsWhenAutoescapeIsName(): void
     {
         $twig = new Definition('\Twig\Environment', ['loader', ['autoescape' => 'name']]);
 
@@ -120,12 +87,8 @@ class SetAutoescapePassTest extends TestCase
         $this->assertSame(['\Twig\FileExtensionEscapingStrategy', 'guess'], $default);
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testInjectsWhenAutoescapeIsFalse()
+    /** Test that the compiler pass can be instantiated. */
+    public function testInjectsWhenAutoescapeIsFalse(): void
     {
         $twig = new Definition('\Twig\Environment', ['loader', ['autoescape' => false]]);
 
@@ -152,12 +115,8 @@ class SetAutoescapePassTest extends TestCase
         $this->assertSame(false, $default);
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testInjectsWhenAutoescapeIsService()
+    /** Test that the compiler pass can be instantiated. */
+    public function testInjectsWhenAutoescapeIsService(): void
     {
         $realStrategy = [new Reference('foo.bar'), 'baz'];
 

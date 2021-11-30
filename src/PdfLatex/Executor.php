@@ -1,22 +1,5 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex;
@@ -26,45 +9,32 @@ use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
+use function array_merge;
+use function implode;
+use function is_executable;
+use function is_file;
+use function preg_match_all;
+use function substr;
+
 /**
  * This class runs pdflatex on a passed file.
  */
 class Executor
 {
-    /**
-     * The path to the pdflatex binary.
-     *
-     * @var string
-     */
-    private $binary;
+    /** The path to the pdflatex binary. */
+    private string $binary;
 
-    /**
-     * The working directory.
-     *
-     * @var string
-     */
-    private $directory;
+    /** The working directory. */
+    private string $directory;
 
-    /**
-     * The tex file to process.
-     *
-     * @var string
-     */
-    private $texFile;
+    /** The tex file to process. */
+    private string $texFile;
 
-    /**
-     * The pdf file being generated.
-     *
-     * @var string
-     */
-    private $pdfFile;
+    /** The pdf file being generated. */
+    private string $pdfFile;
 
-    /**
-     * The list of include paths.
-     *
-     * @var array
-     */
-    private $includePaths;
+    /** The list of include paths. */
+    private array $includePaths;
 
     /**
      * Create a new instance.
@@ -103,17 +73,15 @@ class Executor
      * Run latex on the passed file and return the path to the PDF.
      *
      * @param null|string $outputDirectory The optional output directory, if different than source directory.
-     *
-     * @return string
      */
-    public function run(string $outputDirectory = null)
+    public function run(?string $outputDirectory = null): string
     {
         $compile = true;
         $count   = 0;
 
         $compileOptions = [
             'halt-on-error'    => '',
-            'output-directory' => $outputDirectory ?: $this->directory,
+            'output-directory' => $outputDirectory ?? $this->directory,
             'interaction'      => 'nonstopmode',
         ];
 
@@ -134,9 +102,7 @@ class Executor
     /**
      * Run latex over the file and return true if another pass is needed.
      *
-     * @param array $options The additional options.
-     *
-     * @return bool
+     * @param list<string> $options The additional options.
      *
      * @throws RuntimeException     When the process did not create a pdf file.
      * @throws LatexFailedException When the process exited non zero.

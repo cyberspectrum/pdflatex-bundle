@@ -1,22 +1,5 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test;
@@ -31,24 +14,13 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class TempDirTestCase extends TestCase
 {
-    /**
-     * The temp dir.
-     *
-     * @var string
-     */
-    private $tempDir;
+    /** The temp dir. */
+    private string $tempDir;
 
-    /**
-     * The filesystem.
-     *
-     * @var Filesystem
-     */
-    private $fileSystem;
+    /** The filesystem. */
+    private Filesystem $fileSystem;
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -58,20 +30,13 @@ class TempDirTestCase extends TestCase
         $this->fileSystem->mkdir($this->tempDir);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->fileSystem->remove($this->tempDir);
         parent::tearDown();
     }
 
-    /**
-     * Return the temporary directory path.
-     *
-     * @return string
-     */
+    /** Return the temporary directory path. */
     protected function getTempDir(): string
     {
         return $this->tempDir;

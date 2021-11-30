@@ -1,22 +1,5 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\DependencyInjection\Compiler;
@@ -35,12 +18,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class AddEscaperPassTest extends TestCase
 {
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the compiler pass can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler\AddEscaperPass',
@@ -48,16 +27,12 @@ class AddEscaperPassTest extends TestCase
         );
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testAbstainsWithoutTwig()
+    /** Test that the compiler pass can be instantiated. */
+    public function testAbstainsWithoutTwig(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['getDefinition'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
         $container
@@ -69,12 +44,8 @@ class AddEscaperPassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testInjectsWhenTwigAvailable()
+    /** Test that the compiler pass can be instantiated. */
+    public function testInjectsWhenTwigAvailable(): void
     {
         $twig = new Definition('\Twig\Environment', ['loader', ['autoescape' => 'name']]);
 
@@ -90,10 +61,10 @@ class AddEscaperPassTest extends TestCase
 
         $calls = $extension->getMethodCalls();
         $this->assertSame(1, count($calls));
-        $this->assertInternalType('array', $calls[0]);
+        $this->assertIsArray($calls[0]);
         $this->assertSame(2, count($calls[0]));
         $this->assertSame('addEscaperTo', $calls[0][0]);
-        $this->assertInternalType('array', $calls[0][1]);
+        $this->assertIsArray($calls[0][1]);
         $this->assertSame(1, count($calls[0][1]));
         $this->assertInstanceOf(Reference::class, $calls[0][1][0]);
         $this->assertSame('twig', (string) $calls[0][1][0]);

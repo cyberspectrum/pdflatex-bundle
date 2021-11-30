@@ -1,28 +1,12 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\PdfLatex;
 
 use CyberSpectrum\PdfLatexBundle\PdfLatex\File\FileInterface;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\Job;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,12 +16,8 @@ use PHPUnit\Framework\TestCase;
  */
 class JobTest extends TestCase
 {
-    /**
-     * Test that the class can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the class can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\PdfLatex\Job',
@@ -45,28 +25,20 @@ class JobTest extends TestCase
         );
     }
 
-    /**
-     * Test that the class can be instantiated.
-     *
-     * @return void
-     */
-    public function testInstantiationThrowsExceptionForNonTexFile()
+    /** Test that the class can be instantiated. */
+    public function testInstantiationThrowsExceptionForNonTexFile(): void
     {
         $mock = $this->getMockForAbstractClass(FileInterface::class);
         $mock->method('getName')->willReturn('foo.bar');
 
         $this->expectException('File foo.bar does not have file extension ".tex"');
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         new Job($mock);
     }
 
-    /**
-     * Test that the getter returns the input file.
-     *
-     * @return void
-     */
-    public function testTexFileIsReturned()
+    /** Test that the getter returns the input file. */
+    public function testTexFileIsReturned(): void
     {
         $mock = $this->mockTexFile();
         $job  = new Job($mock);
@@ -74,24 +46,16 @@ class JobTest extends TestCase
         $this->assertSame($mock, $job->getTexFile());
     }
 
-    /**
-     * Test that the assets array is empty when none have been added.
-     *
-     * @return void
-     */
-    public function testEmptyAssetsArrayWhenNoneAdded()
+    /** Test that the assets array is empty when none have been added. */
+    public function testEmptyAssetsArrayWhenNoneAdded(): void
     {
         $job = new Job($this->mockTexFile());
 
         $this->assertSame([], $job->getAssets());
     }
 
-    /**
-     * Test that assets can be added and retrieved.
-     *
-     * @return void
-     */
-    public function testCanAddAndRetrieveAssets()
+    /** Test that assets can be added and retrieved. */
+    public function testCanAddAndRetrieveAssets(): void
     {
         $job    = new Job($this->mockTexFile());
         $assets = [$this->mockTexFile(), $this->mockTexFile()];
@@ -102,11 +66,7 @@ class JobTest extends TestCase
         $this->assertSame($assets, $job->getAssets());
     }
 
-    /**
-     * Mock a .tex file.
-     *
-     * @return FileInterface
-     */
+    /** Mock a .tex file. */
     private function mockTexFile(): FileInterface
     {
         $mock = $this->getMockForAbstractClass(FileInterface::class);

@@ -1,22 +1,5 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-
 declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\Twig;
@@ -37,11 +20,9 @@ class ExtensionTest extends TestCase
     /**
      * Test that the class can be instantiated.
      *
-     * @return void
-     *
      * @covers \CyberSpectrum\PdfLatexBundle\Twig\Extension::__construct
      */
-    public function testCanBeInstantiated()
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\Twig\Extension',
@@ -51,11 +32,9 @@ class ExtensionTest extends TestCase
     /**
      * Test that the class can be instantiated with text utils instance.
      *
-     * @return void
-     *
      * @covers \CyberSpectrum\PdfLatexBundle\Twig\Extension::__construct
      */
-    public function testCanBeInstantiatedWithArgument()
+    public function testCanBeInstantiatedWithArgument(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\Twig\Extension',
@@ -67,12 +46,8 @@ class ExtensionTest extends TestCase
         $this->assertSame($utils, $reflection->getValue($extension));
     }
 
-    /**
-     * Data provider for the filter tests.
-     *
-     * @return array
-     */
-    public function filterTestProvider()
+    /** Data provider for the filter tests. */
+    public function filterTestProvider(): iterable
     {
         return [
             'Should escape umlauts' => [
@@ -105,28 +80,22 @@ class ExtensionTest extends TestCase
      * @param string $template The template content.
      * @param array  $context  The context.
      *
-     * @return void
-     *
      * @dataProvider filterTestProvider
      *
      * @covers \CyberSpectrum\PdfLatexBundle\Twig\Extension::texify
      * @covers \CyberSpectrum\PdfLatexBundle\Twig\Extension::texifyAll
      */
-    public function testFilter($expected, $template, $context)
+    public function testFilter(string $expected, string $template, array $context): void
     {
         $twig = new Environment(new ArrayLoader(['template.tex.twig' => $template]), ['autoescape' => 'tex']);
 
-        $twig->addExtension($extension = new Extension());
+        $twig->addExtension(new Extension());
 
         $this->assertSame($expected, $twig->render('template.tex.twig', $context));
     }
 
-    /**
-     * Test that the escape method is called.
-     *
-     * @return void
-     */
-    public function testEscape()
+    /** Test that the escape method is called. */
+    public function testEscape(): void
     {
         $twig = new Environment(
             new ArrayLoader(['template.tex.twig' => 'content{{backslash}}value']),
@@ -142,12 +111,8 @@ class ExtensionTest extends TestCase
         );
     }
 
-    /**
-     * Test that empty values are not being passed.
-     *
-     * @return void
-     */
-    public function testTexifyDoesNotPassEmptyString()
+    /** Test that empty values are not being passed. */
+    public function testTexifyDoesNotPassEmptyString(): void
     {
         $utils = $this->getMockBuilder(TextUtils::class)->setMethods(['parseText'])->getMock();
         $utils->expects($this->never())->method('parseText');
@@ -156,12 +121,8 @@ class ExtensionTest extends TestCase
         $extension->texify('');
     }
 
-    /**
-     * Test that empty values are not being passed.
-     *
-     * @return void
-     */
-    public function testTexifyAllDoesNotPassEmptyString()
+    /** Test that empty values are not being passed. */
+    public function testTexifyAllDoesNotPassEmptyString(): void
     {
         $utils = $this->getMockBuilder(TextUtils::class)->setMethods(['parseText'])->getMock();
         $utils->expects($this->never())->method('parseText');
@@ -170,12 +131,8 @@ class ExtensionTest extends TestCase
         $extension->texifyAll('');
     }
 
-    /**
-     * Test that the escape method is called.
-     *
-     * @return void
-     */
-    public function testDoesNotEscapeWhenDisablingInTemplate()
+    /** Test that the escape method is called. */
+    public function testDoesNotEscapeWhenDisablingInTemplate(): void
     {
         $twig = new Environment(
             new ArrayLoader(['template.tex.twig' => '
@@ -199,12 +156,8 @@ content\\backslash{}value
         );
     }
 
-    /**
-     * Test that the escape method is called.
-     *
-     * @return void
-     */
-    public function testDoesEscapeWhenUsingHtml()
+    /** Test that the escape method is called. */
+    public function testDoesEscapeWhenUsingHtml(): void
     {
         $twig = new Environment(
             new ArrayLoader(['template.tex.twig' => '
@@ -226,12 +179,8 @@ content\\&amp;value
         );
     }
 
-    /**
-     * Test that the escape method is called.
-     *
-     * @return void
-     */
-    public function testDoesNotEscapeWhenUsingHtmlInTemplate()
+    /** Test that the escape method is called. */
+    public function testDoesNotEscapeWhenUsingHtmlInTemplate(): void
     {
         $twig = new Environment(
             new ArrayLoader(['template.tex.twig' => '
