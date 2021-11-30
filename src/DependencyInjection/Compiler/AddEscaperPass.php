@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler;
 
+use CyberSpectrum\PdfLatexBundle\Twig\Extension;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -20,7 +21,7 @@ class AddEscaperPass implements CompilerPassInterface
             return;
         }
 
-        $extension = $container->getDefinition('cyberspectrum.pdflatex.twig.extension');
+        $extension = $container->getDefinition(Extension::class);
         $extension->addMethodCall('addEscaperTo', [new Reference('twig')]);
     }
 }

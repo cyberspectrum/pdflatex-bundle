@@ -24,7 +24,7 @@ class StreamedFile extends AbstractStreamedFile
     /** The file name. */
     private string $name;
 
-    /** The sub directory. */
+    /** The subdirectory. */
     private string $directory;
 
     /**
@@ -32,13 +32,14 @@ class StreamedFile extends AbstractStreamedFile
      *
      * @param resource $stream    The stream to use.
      * @param string   $name      The file name.
-     * @param string   $directory The optional sub directory.
+     * @param string   $directory The optional subdirectory.
      *
      * @throws InvalidArgumentException When no resource has been passed.
      */
     public function __construct($stream, string $name, string $directory = '')
     {
-        if (false === is_resource($stream)) {
+        /** @psalm-suppress DocblockTypeContradiction */
+        if (!is_resource($stream)) {
             throw new InvalidArgumentException(
                 sprintf('Argument must be a valid resource type. %s given.', gettype($stream))
             );

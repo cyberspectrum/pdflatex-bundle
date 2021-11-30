@@ -12,12 +12,12 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class CyberSpectrumPdfLatexBundle extends Bundle
 {
-    public function getContainerExtension()
+    public function getContainerExtension(): PdfLatexExtension
     {
         return new PdfLatexExtension();
     }
 
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 

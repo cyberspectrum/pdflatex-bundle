@@ -54,7 +54,7 @@ class Extension extends AbstractExtension
     public function escape(Environment $twig, string $string = null, string $charset = null)
     {
         if (empty($string)) {
-            return $string;
+            return '';
         }
         return $this->texifyAll($string);
     }

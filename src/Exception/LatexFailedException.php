@@ -26,9 +26,9 @@ class LatexFailedException extends RuntimeException
         $error = sprintf(
             'The command "%s" failed.' . "\n\nExit Code: %s(%s)\n\nWorking directory: %s",
             $process->getCommandLine(),
-            $process->getExitCode(),
-            $process->getExitCodeText(),
-            $process->getWorkingDirectory()
+            (int) $process->getExitCode(),
+            (string) $process->getExitCodeText(),
+            (string) $process->getWorkingDirectory()
         );
 
         if (!$process->isOutputDisabled()) {
@@ -56,7 +56,7 @@ class LatexFailedException extends RuntimeException
         $errors = $this->process->getErrorOutput();
 
         return str_replace(
-            $this->process->getWorkingDirectory(),
+            (string) $this->process->getWorkingDirectory(),
             '',
             $output . $errors
         );

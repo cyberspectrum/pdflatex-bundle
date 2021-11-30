@@ -1,11 +1,11 @@
 {
   "name": "cyberspectrum/pdflatex-bundle",
+  "type": "symfony-bundle",
   "description": "pdflatex bundle",
   "keywords": [
     "pdflatex",
     "symfony"
   ],
-  "type": "symfony-bundle",
   "homepage": "https://www.cyberspectrum.de/",
   "license": "LGPL-3.0-or-later",
   "authors": [
@@ -16,11 +16,6 @@
       "role": "Developer"
     }
   ],
-  "support": {
-    "email": "info@cyberspectrum.de",
-    "issues": "https://github.com/cyberspectrum/pdflatex-bundle/issues",
-    "source": "https://github.com/cyberspectrum/pdflatex-bundle"
-  },
   "require": {
     "php": "^7.4 || ^8.0",
     "symfony/config": "^4.4 || ^5.0",
@@ -33,8 +28,13 @@
   },
   "require-dev": {
     "phpcq/runner-bootstrap": "^1.0@dev",
-    "twig/twig": "^3.0",
-    "symfony/twig-bundle": "^4.0 | ^5.0"
+    "symfony/twig-bundle": "^4.0 || ^5.0",
+    "twig/twig": "^3.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.0.x-dev"
+    }
   },
   "autoload": {
     "psr-4": {
@@ -46,9 +46,9 @@
       "CyberSpectrum\\PdfLatexBundle\\Test\\": "tests/"
     }
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0.x-dev"
-    }
+  "support": {
+    "email": "info@cyberspectrum.de",
+    "issues": "https://github.com/cyberspectrum/pdflatex-bundle/issues",
+    "source": "https://github.com/cyberspectrum/pdflatex-bundle"
   }
 }

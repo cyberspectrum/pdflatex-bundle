@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Twig;
 
+use InvalidArgumentException;
+
 use function call_user_func;
 use function in_array;
 use function is_string;
@@ -12,23 +14,38 @@ use function substr;
 
 /**
  * This class injects a tex escaping strategy.
+ *
+ * @psalm-type TCallback=callable(string): (false|string)
  */
 class FileExtensionEscapingStrategy
 {
     /**
      * The default strategy to use.
      *
-     * @var string|callable|false
+     * @var TCallback
      */
     private $defaultStrategy;
 
     /**
      * Create a new instance.
      *
-     * @param string|callable|false $defaultStrategy The default strategy to use when not a .tex file.
+     * @param string|TCallback|false $defaultStrategy The default strategy to use when not a .tex file.
      */
     public function __construct($defaultStrategy)
     {
+        if (!is_callable($defaultStrategy)) {
+            /** @psalm-suppress DocblockTypeContradiction */
+            if (!(is_string($defaultStrategy) || false === $defaultStrategy)) {
+                throw new InvalidArgumentException('Default strategy must be callable, string or false');
+            }
+
+            $this->defaultStrategy = /** @return false|string*/ static function () use ($defaultStrategy) {
+                return $defaultStrategy;
+            };
+
+            return;
+        }
+
         $this->defaultStrategy = $defaultStrategy;
     }
 
@@ -59,10 +76,6 @@ class FileExtensionEscapingStrategy
             return 'tex';
         }
 
-        if (false !== $this->defaultStrategy && !is_string($this->defaultStrategy)) {
-            return call_user_func($this->defaultStrategy, $realName);
-        }
-
-        return $this->defaultStrategy;
+        return call_user_func($this->defaultStrategy, $realName);
     }
 }

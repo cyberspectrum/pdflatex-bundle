@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace CyberSpectrum\PdfLatexBundle\Test\DependencyInjection;
 
 use CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor;
+use CyberSpectrum\PdfLatexBundle\Twig\Extension;
+use CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\Extension as SymfonyExtension;
 
 use function dirname;
 use function getenv;
@@ -43,7 +47,7 @@ class PdfLatexExtensionTest extends TestCase
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension',
             $extension = new PdfLatexExtension()
         );
-        $this->assertInstanceOf(Extension::class, $extension);
+        $this->assertInstanceOf(SymfonyExtension::class, $extension);
     }
 
     /** Test that the extension uses path override. */
@@ -124,10 +128,10 @@ class PdfLatexExtensionTest extends TestCase
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
 
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.executor_factory'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.twig.extension'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy'));
+        $this->assertTrue($container->has(ExecutorFactory::class));
+        $this->assertTrue($container->has(JobProcessor::class));
+        $this->assertTrue($container->has(Extension::class));
+        $this->assertTrue($container->has(FileExtensionEscapingStrategy::class));
     }
 
     /**
@@ -146,9 +150,9 @@ class PdfLatexExtensionTest extends TestCase
 
         $container->compile();
 
-        $this->assertFalse($container->has('cyberspectrum.pdflatex.executor_factory'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
-        $this->assertFalse($container->has('cyberspectrum.pdflatex.twig.extension'));
-        $this->assertFalse($container->has('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy'));
+        $this->assertFalse($container->has(ExecutorFactory::class));
+        $this->assertTrue($container->has(JobProcessor::class));
+        $this->assertFalse($container->has(Extension::class));
+        $this->assertFalse($container->has(FileExtensionEscapingStrategy::class));
     }
 }

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler;
 
+use CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Twig\FileExtensionEscapingStrategy as TwigFileExtensionEscapingStrategy;
 
 /**
  * This replaces the twig escaping strategy to try tex first.
@@ -20,17 +22,18 @@ class SetAutoescapePass implements CompilerPassInterface
             return;
         }
 
-        $twig   = $container->getDefinition('twig');
+        $twig = $container->getDefinition('twig');
+        /** @var array{autoescape: mixed} $config */
         $config = $twig->getArgument(1);
         if (!is_string($config['autoescape']) || 'name' === $config['autoescape']) {
             if ('name' === $config['autoescape']) {
-                $config['autoescape'] = ['\Twig\FileExtensionEscapingStrategy', 'guess'];
+                $config['autoescape'] = [TwigFileExtensionEscapingStrategy::class, 'guess'];
             }
-            $escaper = $container->getDefinition('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy');
+            $escaper = $container->getDefinition(FileExtensionEscapingStrategy::class);
             $escaper->setArgument(0, $config['autoescape']);
 
             $config['autoescape'] =
-                [new Reference('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy'), 'guess'];
+                [new Reference(FileExtensionEscapingStrategy::class), 'guess'];
             $twig->replaceArgument(1, $config);
         }
     }

@@ -19,16 +19,19 @@ class PdfLatexExtension extends Extension
     /**
      * {@inheritdoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
+        $configuration = $this->getConfiguration($configs, $container);
+        assert($configuration instanceof Configuration);
+        /** @var array{pdflatex_binary: string|null} $config */
+        $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter(
             'cyberspectrum.pdflatex.binary',
-            $config['pdflatex_binary'] ?: $this->getDefaultBinary()
+            $config['pdflatex_binary'] ?? $this->getDefaultBinary()
         );
     }
 

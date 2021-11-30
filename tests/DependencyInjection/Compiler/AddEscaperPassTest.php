@@ -53,7 +53,7 @@ class AddEscaperPassTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->setDefinition('twig', $twig);
-        $container->setDefinition('cyberspectrum.pdflatex.twig.extension', $extension);
+        $container->setDefinition(Extension::class, $extension);
 
         $pass = new AddEscaperPass();
 

@@ -33,16 +33,20 @@ class Executor
     /** The pdf file being generated. */
     private string $pdfFile;
 
-    /** The list of include paths. */
+    /**
+     * The list of include paths.
+     *
+     * @var list<string>
+     */
     private array $includePaths;
 
     /**
      * Create a new instance.
      *
-     * @param string $binary       The pdflatex binary.
-     * @param string $directory    The working directory.
-     * @param string $texFile      The tex file name to process (relative to working directory).
-     * @param array  $includePaths Additional include paths to be passed as TEXINPUTS environment variable.
+     * @param string       $binary       The pdflatex binary.
+     * @param string       $directory    The working directory.
+     * @param string       $texFile      The tex file name to process (relative to working directory).
+     * @param list<string> $includePaths Additional include paths to be passed as TEXINPUTS environment variable.
      *
      * @throws InvalidArgumentException If the file name is not a .tex file or the input file does not exist.
      */
