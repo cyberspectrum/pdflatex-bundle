@@ -62,7 +62,7 @@ class Extension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('texify', [$this, 'texify'], ['is_safe' => ['tex']]),
