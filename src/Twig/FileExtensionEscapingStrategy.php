@@ -16,7 +16,8 @@
  * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
  * @filesource
  */
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Twig;
 

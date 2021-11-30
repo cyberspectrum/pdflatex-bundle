@@ -6,13 +6,13 @@
     "symfony"
   ],
   "type": "symfony-bundle",
-  "homepage": "http://www.cyberspectrum.de/",
+  "homepage": "https://www.cyberspectrum.de/",
   "license": "LGPL-3.0-or-later",
   "authors": [
     {
       "name": "Christian Schiffler",
       "email": "c.schiffler@cyberspectrum.de",
-      "homepage": "http://www.cyberspectrum.de",
+      "homepage": "https://www.cyberspectrum.de",
       "role": "Developer"
     }
   ],
@@ -22,7 +22,7 @@
     "source": "https://github.com/cyberspectrum/pdflatex-bundle"
   },
   "require": {
-    "php": "^7.2",
+    "php": "^7.4 || ^8.0",
     "symfony/config": "^4.4 | ^5.0",
     "symfony/dependency-injection": "^4.4 | ^5.0",
     "symfony/filesystem": "^4.4 | ^5.0",
@@ -31,7 +31,7 @@
     "symfony/process": "^4.4 | ^5.0"
   },
   "require-dev": {
-    "phpcq/all-tasks": "^1.2.1",
+    "phpcq/runner-bootstrap": "^1.0@dev",
     "twig/twig": "^3.0",
     "symfony/twig-bundle": "^4.0 | ^5.0"
   },

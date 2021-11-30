@@ -11,6 +11,11 @@ Thumbs.db
 .idea/
 nbproject/
 
+# phpcq
+/.phpcq
+/phpunit.xml
+/.phpunit.result.cache
+
 # composer related
 vendor/
 composer.lock
