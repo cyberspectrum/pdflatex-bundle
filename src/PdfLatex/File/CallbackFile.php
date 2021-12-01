@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex\File;
 
+use RuntimeException;
+
 /**
  * This implements a physical file on local disk.
  *
@@ -56,5 +58,8 @@ class CallbackFile implements FileInterface
             $directory .= DIRECTORY_SEPARATOR . $this->directory;
         }
         call_user_func_array($this->callback, [$directory, $this->name]);
+        if (!is_readable($absolutePath = $directory . DIRECTORY_SEPARATOR . $this->name)) {
+            throw new RuntimeException('Could not save to ' . $absolutePath);
+        }
     }
 }
