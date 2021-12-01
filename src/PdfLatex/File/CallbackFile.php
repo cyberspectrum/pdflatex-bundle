@@ -7,7 +7,7 @@ namespace CyberSpectrum\PdfLatexBundle\PdfLatex\File;
 /**
  * This implements a physical file on local disk.
  *
- * @psalm-type TCallbackFileCallback=callable(string, string, string): void
+ * @psalm-type TCallbackFileCallback=callable(string, string): void
  */
 class CallbackFile implements FileInterface
 {
@@ -23,13 +23,15 @@ class CallbackFile implements FileInterface
     /** The name. */
     private string $name;
 
-    /** The sub directory. */
+    /** The subdirectory. */
     private string $directory;
 
     /**
      * Create a new instance.
      *
-     * @param TCallbackFileCallback $callback
+     * @param TCallbackFileCallback $callback The callback to invoke.
+     * @param string $name                    The file name.
+     * @param string $directory               Optional subdirectory to create.
      */
     public function __construct(callable $callback, string $name, string $directory = '')
     {
@@ -50,6 +52,9 @@ class CallbackFile implements FileInterface
 
     public function saveTo(string $directory): void
     {
-        call_user_func_array($this->callback, [$directory, $this->name, $this->directory]);
+        if ($this->directory) {
+            $directory .= DIRECTORY_SEPARATOR . $this->directory;
+        }
+        call_user_func_array($this->callback, [$directory, $this->name]);
     }
 }

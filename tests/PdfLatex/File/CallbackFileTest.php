@@ -54,10 +54,9 @@ class CallbackFileTest extends TestCase
     /** Test that the name is returned. */
     public function testSavesContentToDestination(): void
     {
-        $callback = function ($directory, $name, $subdir) {
-            Assert::assertSame('destdir', $directory);
+        $callback = function ($directory, $name) {
+            Assert::assertSame('destdir' . DIRECTORY_SEPARATOR . 'subdir', $directory);
             Assert::assertSame('foo.tex', $name);
-            Assert::assertSame('subdir', $subdir);
         };
 
         $file = new CallbackFile($callback, 'foo.tex', 'subdir');
