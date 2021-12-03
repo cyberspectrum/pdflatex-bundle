@@ -25,7 +25,7 @@ class TextUtils
         '#'  => '\\#',
         '_'  => '\\_',
         '^'  => '\\^{}',
-        '°'  => '\$^{\\circ}\$',
+        '°'  => '$^{\\circ}$',
         '>'  => '\\textgreater{}',
         '<'  => '\\textless{}',
         '~'  => '\\textasciitilde{}',
