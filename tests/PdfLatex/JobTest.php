@@ -66,6 +66,24 @@ class JobTest extends TestCase
         $this->assertSame($assets, $job->getAssets());
     }
 
+    public function testCanAddAndRetrieveIncludePaths(): void
+    {
+        $job    = new Job($this->mockTexFile());
+
+        $this->assertSame($job, $job->addIncludePath(__DIR__));
+
+        $this->assertSame([__DIR__], $job->getIncludePaths());
+    }
+
+    public function testCanAddAndRetrieveIncludePathsForRecursiveSearch(): void
+    {
+        $job    = new Job($this->mockTexFile());
+
+        $this->assertSame($job, $job->addIncludePath(__DIR__ . '/..//'));
+
+        $this->assertSame([realpath(__DIR__ . '/..') . '//'], $job->getIncludePaths());
+    }
+
     /** Mock a .tex file. */
     private function mockTexFile(): FileInterface
     {

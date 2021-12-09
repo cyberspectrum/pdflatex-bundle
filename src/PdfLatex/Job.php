@@ -109,6 +109,10 @@ class Job
         if ((false === $realPath) || !is_dir($realPath)) {
             throw new InvalidArgumentException('Not a directory: ' . $path);
         }
+        // Allow recursive inclusion.
+        if ('//' === substr($path, -2)) {
+            $realPath .= '//';
+        }
         $this->includePaths[] = $realPath;
 
         return $this;
