@@ -130,7 +130,7 @@ class ExecutorTest extends TempDirTestCase
         $this->assertFileExists($tmpDir . DIRECTORY_SEPARATOR . 'foo.pdf');
         $contents = explode("\n", file_get_contents($tmpDir . DIRECTORY_SEPARATOR . 'foo.pdf'));
         $this->assertSame(
-            'TEXINPUTS=/include/path' . PATH_SEPARATOR . '/include/path2',
+            'TEXINPUTS=/include/path' . PATH_SEPARATOR . '/include/path2' . PATH_SEPARATOR,
             $contents[0]
         );
         $this->assertSame(

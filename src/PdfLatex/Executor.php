@@ -118,7 +118,8 @@ class Executor
             $this->directory
         );
         $process->setTimeout(60);
-        $process->run(null, ['TEXINPUTS' => implode(PATH_SEPARATOR, $this->includePaths)]);
+        // Keep trailing path delimiter to keep default include paths.
+        $process->run(null, ['TEXINPUTS' => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR]);
         // Check if the pdflatex command completed successfully
         if (!$process->isSuccessful()) {
             throw new LatexFailedException($process);
