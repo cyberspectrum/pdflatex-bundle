@@ -109,7 +109,7 @@ class Executor
      * @param list<string> $options The additional options.
      *
      * @throws RuntimeException     When the process did not create a pdf file.
-     * @throws LatexFailedException When the process exited non zero.
+     * @throws LatexFailedException When the process exited non-zero.
      */
     private function latexPass(array $options): bool
     {
@@ -119,7 +119,15 @@ class Executor
         );
         $process->setTimeout(60);
         // Keep trailing path delimiter to keep default include paths.
-        $process->run(null, ['TEXINPUTS' => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR]);
+        $process->run(null, [
+            'TEXINPUTS'   => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR,
+            'T1FONTS'     => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR,
+            'AFMFONTS'    => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR,
+            'TEXFONTMAPS' => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR,
+            'TFMFONTS'    => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR,
+            'VFFONTS'     => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR,
+            'ENCFONTS'    => implode(PATH_SEPARATOR, $this->includePaths) . PATH_SEPARATOR,
+        ]);
         // Check if the pdflatex command completed successfully
         if (!$process->isSuccessful()) {
             throw new LatexFailedException($process);
