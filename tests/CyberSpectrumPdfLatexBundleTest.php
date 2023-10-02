@@ -43,11 +43,13 @@ class CyberSpectrumPdfLatexBundleTest extends TestCase
         $container
             ->expects($this->exactly(2))
             ->method('addCompilerPass')->willReturnOnConsecutiveCalls(
-                $this->returnCallback(function ($pass) {
+                $this->returnCallback(function ($pass) use ($container) {
                     $this->assertInstanceOf(SetAutoescapePass::class, $pass);
+                    return $container;
                 }),
-                $this->returnCallback(function ($pass) {
+                $this->returnCallback(function ($pass) use ($container) {
                     $this->assertInstanceOf(AddEscaperPass::class, $pass);
+                    return $container;
                 })
             );
 
