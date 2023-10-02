@@ -35,7 +35,6 @@ class Extension extends AbstractExtension
      */
     public function addEscaperTo(Environment $environment): void
     {
-        /** @var EscaperExtension $extension */
         $extension = $environment->getExtension(EscaperExtension::class);
         $extension->setEscaper('tex', [$this, 'escape']);
     }
