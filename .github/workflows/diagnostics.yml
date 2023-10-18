@@ -11,8 +11,8 @@ jobs:
         include:
           - php: '8.0'
             output: '-o github-action -o default'
-            phpcq_install: 'install'
-            composer_install: 'install --prefer-dist --no-interaction'
+            phpcq_install: 'update'
+            composer_install: 'update --prefer-dist --no-interaction --prefer-lowest'
           - php: '8.1'
             output: '-o default'
             phpcq_install: 'update'
