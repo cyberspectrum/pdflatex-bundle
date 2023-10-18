@@ -32,8 +32,8 @@ class PdfLatexExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $pdfLatexBinary = $config['pdflatex_binary'] ?? $this->getDefaultBinary();
-         $container->getDefinition(ExecutorFactory::class)->setArgument('$latexBinary', $pdfLatexBinary);
-         $container->getDefinition(JobProcessor::class)->setArgument('$tempDirectory', $config['cache_dir']);
+        $container->getDefinition(ExecutorFactory::class)->setArgument('$latexBinary', $pdfLatexBinary);
+        $container->getDefinition(JobProcessor::class)->setArgument('$tempDirectory', $config['cache_dir']);
     }
 
     /**
