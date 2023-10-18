@@ -14,7 +14,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('cs_pdflatex');
+        $treeBuilder = new TreeBuilder('pdf_latex');
         $rootNode    = $treeBuilder->getRootNode();
 
         $rootNode

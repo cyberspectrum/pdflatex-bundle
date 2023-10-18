@@ -52,7 +52,7 @@ class PdfLatexExtensionTest extends TestCase
     }
 
     /** Test that the extension uses path override. */
-    public function testLoadReturnsOverriddenPathToBinary(): void
+    public function testLoadReturnsOverriddenPaths(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
@@ -62,10 +62,7 @@ class PdfLatexExtensionTest extends TestCase
         $factory = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
         $factory->expects(self::once())->method('setArgument')->with('$latexBinary', '/bin/false');
         $processor = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
-        $processor
-            ->expects(self::once())
-            ->method('setArgument')
-            ->with('$tempDirectory', '%kernel.cache_dir%/pdflatex');
+        $processor->expects(self::once())->method('setArgument')->with('$tempDirectory', '/tmp/path');
 
         $container
             ->expects(self::exactly(2))
@@ -76,14 +73,7 @@ class PdfLatexExtensionTest extends TestCase
             ]));
 
         $extension = new PdfLatexExtension();
-        $extension->load(
-            [
-                'cs_pdflatex' => [
-                    'pdflatex_binary' => '/bin/false',
-                ],
-            ],
-            $container
-        );
+        $extension->load([['pdflatex_binary' => '/bin/false', 'cache_dir' => '/tmp/path']], $container);
     }
 
     /** Test that the extension uses search path by default. */
