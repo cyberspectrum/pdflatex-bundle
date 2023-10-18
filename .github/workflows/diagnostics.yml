@@ -9,18 +9,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: '7.4'
+          - php: '8.0'
             output: '-o github-action -o default'
             phpcq_install: 'install'
             composer_install: 'install --prefer-dist --no-interaction'
-          - php: '8.0'
+          - php: '8.1'
             output: '-o default'
             phpcq_install: 'update'
             composer_install: 'update --prefer-dist --no-interaction'
 
     steps:
       - name: PHP ${{ matrix.php }} Pull source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -32,7 +32,7 @@ jobs:
           coverage: none
 
       - name: PHP ${{ matrix.php }} Cache composer cache directory
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: composer-cache-dir
         with:
@@ -40,7 +40,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}
 
       - name: PHP ${{ matrix.php }} Cache vendor directory
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         env:
           cache-name: composer-vendor
         with:
@@ -59,7 +59,7 @@ jobs:
         run: ./vendor/bin/phpcq run -v ${{ matrix.output }}
 
       - name: PHP ${{ matrix.php }} Upload build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: ${{ success() }} || ${{ failure() }}
         with:
           name: phpcq-builds-php-${{ matrix.php }}
