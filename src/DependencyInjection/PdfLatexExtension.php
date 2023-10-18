@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\DependencyInjection;
 
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor;
 use RuntimeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,13 +28,12 @@ class PdfLatexExtension extends Extension
 
         $configuration = $this->getConfiguration($configs, $container);
         assert($configuration instanceof Configuration);
-        /** @var array{pdflatex_binary: string|null} $config */
+        /** @var array{pdflatex_binary: string|null, cache_dir: string} $config */
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter(
-            'cyberspectrum.pdflatex.binary',
-            $config['pdflatex_binary'] ?? $this->getDefaultBinary()
-        );
+        $pdfLatexBinary = $config['pdflatex_binary'] ?? $this->getDefaultBinary();
+         $container->getDefinition(ExecutorFactory::class)->setArgument('$latexBinary', $pdfLatexBinary);
+         $container->getDefinition(JobProcessor::class)->setArgument('$tempDirectory', $config['cache_dir']);
     }
 
     /**

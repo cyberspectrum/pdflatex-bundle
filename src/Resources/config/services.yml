@@ -1,13 +1,13 @@
 services:
     CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory:
         arguments:
-            - '%cyberspectrum.pdflatex.binary%'
+            $latexBinary: null
         public: false
 
     CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor:
         arguments:
-            - '@CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory'
-            - '%kernel.cache_dir%/pdflatex'
+            $executorFactory: '@CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory'
+            $tempDirectory: null
         public: true
 
     CyberSpectrum\PdfLatexBundle\Twig\Extension:
@@ -17,5 +17,5 @@ services:
 
     CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy:
         arguments:
-            - false
+            $defaultStrategy: false
         public: false

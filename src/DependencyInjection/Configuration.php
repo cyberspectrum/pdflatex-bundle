@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('cache_dir')
-                    ->defaultValue('%kernel.cache_dir%/cs_pdflatex')
+                    ->defaultValue('%kernel.cache_dir%/pdflatex')
                 ->end()
                 ->scalarNode('pdflatex_binary')
                     ->defaultValue(null)

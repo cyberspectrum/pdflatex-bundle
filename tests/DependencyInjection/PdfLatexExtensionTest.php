@@ -12,6 +12,7 @@ use CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension as SymfonyExtension;
 
 use function dirname;
@@ -43,11 +44,11 @@ class PdfLatexExtensionTest extends TestCase
     /** Test that the bundle can be instantiated. */
     public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension',
             $extension = new PdfLatexExtension()
         );
-        $this->assertInstanceOf(SymfonyExtension::class, $extension);
+        self::assertInstanceOf(SymfonyExtension::class, $extension);
     }
 
     /** Test that the extension uses path override. */
@@ -55,13 +56,24 @@ class PdfLatexExtensionTest extends TestCase
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->onlyMethods(['setParameter'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
+        $factory = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $factory->expects(self::once())->method('setArgument')->with('$latexBinary', '/bin/false');
+        $processor = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $processor
+            ->expects(self::once())
+            ->method('setArgument')
+            ->with('$tempDirectory', '%kernel.cache_dir%/pdflatex');
+
         $container
-            ->expects($this->once())
-            ->method('setParameter')
-            ->with('cyberspectrum.pdflatex.binary', '/bin/false');
+            ->expects(self::exactly(2))
+            ->method('getDefinition')
+            ->will(self::returnValueMap([
+                [ExecutorFactory::class, $factory],
+                [JobProcessor::class, $processor],
+            ]));
 
         $extension = new PdfLatexExtension();
         $extension->load(
@@ -79,15 +91,29 @@ class PdfLatexExtensionTest extends TestCase
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->onlyMethods(['setParameter'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
         putenv('PATH=' . ($dir = dirname(__DIR__) . '/fixtures'));
 
+        $factory = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $factory
+            ->expects(self::once())
+            ->method('setArgument')
+            ->with('$latexBinary', $dir . '/pdflatex');
+        $processor = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $processor
+            ->expects(self::once())
+            ->method('setArgument')
+            ->with('$tempDirectory', '%kernel.cache_dir%/pdflatex');
+
         $container
-            ->expects($this->once())
-            ->method('setParameter')
-            ->with('cyberspectrum.pdflatex.binary', $dir . '/pdflatex');
+            ->expects(self::exactly(2))
+            ->method('getDefinition')
+            ->will(self::returnValueMap([
+                [ExecutorFactory::class, $factory],
+                [JobProcessor::class, $processor],
+            ]));
 
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
@@ -98,28 +124,24 @@ class PdfLatexExtensionTest extends TestCase
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->onlyMethods(['setParameter'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
         putenv('PATH=');
 
         $container
-            ->expects($this->never())
-            ->method('setParameter');
+            ->expects(self::never())
+            ->method('getDefinition');
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Could not find a pdflatex binary.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Could not find a pdflatex binary.');
 
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
     }
 
-    /**
-     * Test that the services are being registered.
-     *
-     * @return void
-     */
-    public function testRegistersServices()
+    /** Test that the services are being registered. */
+    public function testRegistersServices(): void
     {
         $container = new ContainerBuilder();
 
@@ -128,18 +150,14 @@ class PdfLatexExtensionTest extends TestCase
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
 
-        $this->assertTrue($container->has(ExecutorFactory::class));
-        $this->assertTrue($container->has(JobProcessor::class));
-        $this->assertTrue($container->has(Extension::class));
-        $this->assertTrue($container->has(FileExtensionEscapingStrategy::class));
+        self::assertTrue($container->has(ExecutorFactory::class));
+        self::assertTrue($container->has(JobProcessor::class));
+        self::assertTrue($container->has(Extension::class));
+        self::assertTrue($container->has(FileExtensionEscapingStrategy::class));
     }
 
-    /**
-     * Test that the container can be compiled.
-     *
-     * @return void
-     */
-    public function testContainerCanBeCompiled()
+    /** Test that the container can be compiled. */
+    public function testContainerCanBeCompiled(): void
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.cache_dir', '/does/not/exist');
@@ -150,9 +168,9 @@ class PdfLatexExtensionTest extends TestCase
 
         $container->compile();
 
-        $this->assertFalse($container->has(ExecutorFactory::class));
-        $this->assertTrue($container->has(JobProcessor::class));
-        $this->assertFalse($container->has(Extension::class));
-        $this->assertFalse($container->has(FileExtensionEscapingStrategy::class));
+        self::assertFalse($container->has(ExecutorFactory::class));
+        self::assertTrue($container->has(JobProcessor::class));
+        self::assertFalse($container->has(Extension::class));
+        self::assertFalse($container->has(FileExtensionEscapingStrategy::class));
     }
 }
