@@ -9,11 +9,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - php: '8.0'
-            output: '-o github-action -o default'
+          - php: '8.4'
+            output: '-o default'
+            phpcq_install: 'install'
+            composer_install: 'install --prefer-dist --no-interaction'
+          - php: '8.1'
+            output: '-o default'
             phpcq_install: 'update'
             composer_install: 'update --prefer-dist --no-interaction --prefer-lowest'
-          - php: '8.1'
+          - php: '8.2'
+            output: '-o default'
+            phpcq_install: 'update'
+            composer_install: 'update --prefer-dist --no-interaction'
+          - php: '8.3'
             output: '-o default'
             phpcq_install: 'update'
             composer_install: 'update --prefer-dist --no-interaction'

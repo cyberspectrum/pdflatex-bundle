@@ -15,10 +15,11 @@ nbproject/
 /.phpcq
 /phpunit.xml
 /.phpunit.result.cache
+/.cache
+/.pdepend
 
 # composer related
 vendor/
-composer.lock
 
 # build
 build/
