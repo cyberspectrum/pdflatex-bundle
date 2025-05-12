@@ -40,7 +40,7 @@ jobs:
           coverage: none
 
       - name: PHP ${{ matrix.php }} Cache composer cache directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: composer-cache-dir
         with:
@@ -48,7 +48,7 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}
 
       - name: PHP ${{ matrix.php }} Cache vendor directory
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         env:
           cache-name: composer-vendor
         with:
@@ -67,7 +67,7 @@ jobs:
         run: ./vendor/bin/phpcq run -v ${{ matrix.output }}
 
       - name: PHP ${{ matrix.php }} Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ success() }} || ${{ failure() }}
         with:
           name: phpcq-builds-php-${{ matrix.php }}
