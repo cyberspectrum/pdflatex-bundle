@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 /**
  * This class processes jobs.
  */
-final class JobProcessor
+final readonly class JobProcessor
 {
     /** The executor factory. */
     private ExecutorFactoryInterface $executorFactory;

@@ -13,7 +13,7 @@ jobs:
             output: '-o default'
             phpcq_install: 'install'
             composer_install: 'install --prefer-dist --no-interaction'
-          - php: '8.1'
+          - php: '8.2'
             output: '-o default'
             phpcq_install: 'update'
             composer_install: 'update --prefer-dist --no-interaction --prefer-lowest'

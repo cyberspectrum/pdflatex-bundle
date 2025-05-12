@@ -21,7 +21,7 @@ final class Job
     private readonly FileInterface $texFile;
 
     /** The name of the job. */
-    private string $jobName;
+    private readonly string $jobName;
 
     /**
      * The assets to add.

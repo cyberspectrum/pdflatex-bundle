@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * This adds the tex escaper to the escapers.
  */
-final class AddEscaperPass implements CompilerPassInterface
+final readonly class AddEscaperPass implements CompilerPassInterface
 {
     #[\Override]
     public function process(ContainerBuilder $container): void

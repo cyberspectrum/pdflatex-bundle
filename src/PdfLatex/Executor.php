@@ -19,26 +19,26 @@ use function substr;
 /**
  * This class runs pdflatex on a passed file.
  */
-final class Executor implements ExecutorInterface
+final readonly class Executor implements ExecutorInterface
 {
     /** The path to the pdflatex binary. */
-    private readonly string $binary;
+    private string $binary;
 
     /** The working directory. */
-    private readonly string $directory;
+    private string $directory;
 
     /** The tex file to process. */
-    private readonly string $texFile;
+    private string $texFile;
 
     /** The pdf file being generated. */
-    private readonly string $pdfFile;
+    private string $pdfFile;
 
     /**
      * The list of include paths.
      *
      * @var list<string>
      */
-    private readonly array $includePaths;
+    private array $includePaths;
 
     /**
      * Create a new instance.

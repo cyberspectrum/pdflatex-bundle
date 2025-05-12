@@ -13,7 +13,7 @@ use Twig\FileExtensionEscapingStrategy as TwigFileExtensionEscapingStrategy;
 /**
  * This replaces the twig escaping strategy to try tex first.
  */
-final class SetAutoescapePass implements CompilerPassInterface
+final readonly class SetAutoescapePass implements CompilerPassInterface
 {
     #[\Override]
     public function process(ContainerBuilder $container): void

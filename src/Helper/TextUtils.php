@@ -7,10 +7,10 @@ namespace CyberSpectrum\PdfLatexBundle\Helper;
 /**
  * This class pre-processes text for usage in TeX documents.
  */
-final class TextUtils implements TextUtilsInterface
+final readonly class TextUtils implements TextUtilsInterface
 {
     /** List of UTF-8 chars and their TeX representation. */
-    public static array $charMap = [
+    public const CHARMAP = [
         '\\' => '\\backslash{}',
         '{'  => '\\{',
         '}'  => '\\}',
@@ -102,7 +102,7 @@ final class TextUtils implements TextUtilsInterface
     {
         // Try to replace HTML entities
         $text = html_entity_decode($text, ENT_QUOTES, 'utf-8');
-        $text = strtr($text, self::$charMap);
+        $text = strtr($text, self::CHARMAP);
 
         // New lines if required.
         if ($escapeNewLine) {

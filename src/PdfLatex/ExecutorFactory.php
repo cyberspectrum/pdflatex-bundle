@@ -7,10 +7,10 @@ namespace CyberSpectrum\PdfLatexBundle\PdfLatex;
 /**
  * This creates executors.
  */
-final class ExecutorFactory implements ExecutorFactoryInterface
+final readonly class ExecutorFactory implements ExecutorFactoryInterface
 {
     /** The pdf latex binary. */
-    private readonly string $latexBinary;
+    private string $latexBinary;
 
     /** @param string $latexBinary The path to pdflatex. */
     public function __construct(string $latexBinary)
