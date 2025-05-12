@@ -42,6 +42,9 @@ abstract class AbstractStreamedFile implements FileInterface
         }
 
         $target = fopen($destination . DIRECTORY_SEPARATOR . $this->getName(), 'wb');
+        if (false === $target) {
+            throw new RuntimeException('Could not open ' . $destination . DIRECTORY_SEPARATOR . $this->getName());
+        }
 
         try {
             fseek($source, 0);

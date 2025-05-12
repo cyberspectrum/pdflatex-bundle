@@ -7,7 +7,7 @@ namespace CyberSpectrum\PdfLatexBundle\Helper;
 /**
  * This class pre-processes text for usage in TeX documents.
  */
-class TextUtils
+final class TextUtils implements TextUtilsInterface
 {
     /** List of UTF-8 chars and their TeX representation. */
     public static array $charMap = [
@@ -97,14 +97,7 @@ class TextUtils
         'ș'  => '\\c{s}',
     ];
 
-    /**
-     * Parse the text and replace known special latex characters correctly.
-     *
-     * @param string $text          The string that needs to be parsed.
-     * @param bool   $escapeNewLine If set, newline characters will be replaced by LaTeX entities (default false).
-     *
-     * @return string
-     */
+    #[\Override]
     public function parseText(string $text, bool $escapeNewLine = false): string
     {
         // Try to replace HTML entities

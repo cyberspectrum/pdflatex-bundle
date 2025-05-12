@@ -10,8 +10,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 /**
  * Adds the Contao configuration structure.
  */
-class Configuration implements ConfigurationInterface
+final class Configuration implements ConfigurationInterface
 {
+    #[\Override]
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('pdf_latex');

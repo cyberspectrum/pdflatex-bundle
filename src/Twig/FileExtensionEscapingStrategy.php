@@ -17,7 +17,7 @@ use function substr;
  *
  * @psalm-type TCallback=callable(string): (false|string)
  */
-class FileExtensionEscapingStrategy
+final class FileExtensionEscapingStrategy
 {
     /**
      * The default strategy to use.
@@ -39,9 +39,7 @@ class FileExtensionEscapingStrategy
                 throw new InvalidArgumentException('Default strategy must be callable, string or false');
             }
 
-            $this->defaultStrategy = /** @return false|string*/ static function () use ($defaultStrategy) {
-                return $defaultStrategy;
-            };
+            $this->defaultStrategy = static fn (): string|false => $defaultStrategy;
 
             return;
         }
@@ -58,7 +56,7 @@ class FileExtensionEscapingStrategy
      *
      * @return string|false The escaping strategy name to use or false to disable
      */
-    public function guess(string $name)
+    public function guess(string $name): string|false
     {
         // See \Twig_FileExtensionEscapingStrategy::guess
         if (in_array(substr($name, -1), ['/', '\\'])) {
@@ -67,7 +65,7 @@ class FileExtensionEscapingStrategy
         }
 
         $realName = $name;
-        if ('.twig' === substr($name, -5)) {
+        if (str_ends_with($name, '.twig')) {
             $name = substr($name, 0, -5);
         }
 

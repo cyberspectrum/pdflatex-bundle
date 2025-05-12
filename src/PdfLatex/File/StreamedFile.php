@@ -12,7 +12,7 @@ use function sprintf;
 /**
  * This implements a file from a stream.
  */
-class StreamedFile extends AbstractStreamedFile
+final class StreamedFile extends AbstractStreamedFile
 {
     /**
      * The stream.
@@ -22,10 +22,10 @@ class StreamedFile extends AbstractStreamedFile
     private $stream;
 
     /** The file name. */
-    private string $name;
+    private readonly string $name;
 
     /** The subdirectory. */
-    private string $directory;
+    private readonly string $directory;
 
     /**
      * Create a new instance.
@@ -50,16 +50,19 @@ class StreamedFile extends AbstractStreamedFile
         $this->directory = $directory;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getDirectory(): string
     {
         return $this->directory;
     }
 
+    #[\Override]
     public function saveTo(string $directory): void
     {
         $this->save($this->stream, $directory);

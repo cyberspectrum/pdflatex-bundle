@@ -19,26 +19,26 @@ use function substr;
 /**
  * This class runs pdflatex on a passed file.
  */
-class Executor
+final class Executor implements ExecutorInterface
 {
     /** The path to the pdflatex binary. */
-    private string $binary;
+    private readonly string $binary;
 
     /** The working directory. */
-    private string $directory;
+    private readonly string $directory;
 
     /** The tex file to process. */
-    private string $texFile;
+    private readonly string $texFile;
 
     /** The pdf file being generated. */
-    private string $pdfFile;
+    private readonly string $pdfFile;
 
     /**
      * The list of include paths.
      *
      * @var list<string>
      */
-    private array $includePaths;
+    private readonly array $includePaths;
 
     /**
      * Create a new instance.
@@ -56,7 +56,7 @@ class Executor
             throw new InvalidArgumentException('File ' . $binary . ' is not executable.');
         }
 
-        if ('.tex' !== substr($texFile, -4)) {
+        if (!str_ends_with($texFile, '.tex')) {
             throw new InvalidArgumentException('File ' . $texFile . ' does not have file extension ".tex".');
         }
 
@@ -73,11 +73,7 @@ class Executor
         $this->includePaths = $includePaths;
     }
 
-    /**
-     * Run latex on the passed file and return the path to the PDF.
-     *
-     * @param null|string $outputDirectory The optional output directory, if different than source directory.
-     */
+    #[\Override]
     public function run(?string $outputDirectory = null): string
     {
         $compile = true;

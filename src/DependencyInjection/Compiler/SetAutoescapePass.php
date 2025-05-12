@@ -13,8 +13,9 @@ use Twig\FileExtensionEscapingStrategy as TwigFileExtensionEscapingStrategy;
 /**
  * This replaces the twig escaping strategy to try tex first.
  */
-class SetAutoescapePass implements CompilerPassInterface
+final class SetAutoescapePass implements CompilerPassInterface
 {
+    #[\Override]
     public function process(ContainerBuilder $container): void
     {
         // No twig? can not inject.

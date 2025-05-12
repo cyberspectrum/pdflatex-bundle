@@ -9,19 +9,19 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 /**
  * This class processes jobs.
  */
-class JobProcessor
+final class JobProcessor
 {
     /** The executor factory. */
-    private ExecutorFactory $executorFactory;
+    private ExecutorFactoryInterface $executorFactory;
 
     /** The temporary base directory. */
     private string $tempDirectory;
 
     /**
-     * @param ExecutorFactory $executorFactory The executor factory.
-     * @param string          $tempDirectory   The temporary directory.
+     * @param ExecutorFactoryInterface $executorFactory The executor factory.
+     * @param string                   $tempDirectory   The temporary directory.
      */
-    public function __construct(ExecutorFactory $executorFactory, string $tempDirectory)
+    public function __construct(ExecutorFactoryInterface $executorFactory, string $tempDirectory)
     {
         $this->executorFactory = $executorFactory;
         $this->tempDirectory   = $tempDirectory;

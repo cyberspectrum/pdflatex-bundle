@@ -10,13 +10,15 @@ use CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class CyberSpectrumPdfLatexBundle extends Bundle
+final class CyberSpectrumPdfLatexBundle extends Bundle
 {
+    #[\Override]
     public function getContainerExtension(): PdfLatexExtension
     {
         return new PdfLatexExtension();
     }
 
+    #[\Override]
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);

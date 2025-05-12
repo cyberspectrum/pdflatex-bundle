@@ -11,7 +11,7 @@ use RuntimeException;
  *
  * @psalm-type TCallbackFileCallback=callable(string, string): void
  */
-class CallbackFile implements FileInterface
+final class CallbackFile implements FileInterface
 {
     /**
      * The callable to call when saving the contents.
@@ -23,10 +23,10 @@ class CallbackFile implements FileInterface
     private $callback;
 
     /** The name. */
-    private string $name;
+    private readonly string $name;
 
     /** The subdirectory. */
-    private string $directory;
+    private readonly string $directory;
 
     /**
      * Create a new instance.
@@ -42,16 +42,19 @@ class CallbackFile implements FileInterface
         $this->directory = $directory;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getDirectory(): string
     {
         return $this->directory;
     }
 
+    #[\Override]
     public function saveTo(string $directory): void
     {
         if ($this->directory) {

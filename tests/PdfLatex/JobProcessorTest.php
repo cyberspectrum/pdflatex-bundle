@@ -6,6 +6,8 @@ namespace CyberSpectrum\PdfLatexBundle\Test\PdfLatex;
 
 use CyberSpectrum\PdfLatexBundle\PdfLatex\Executor;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactoryInterface;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorInterface;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\File\FileInterface;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\Job;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor;
@@ -24,7 +26,7 @@ class JobProcessorTest extends TestCase
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor',
             new JobProcessor(
-                $this->getMockBuilder(ExecutorFactory::class)->disableOriginalConstructor()->getMock(),
+                $this->getMockBuilder(ExecutorFactoryInterface::class)->disableOriginalConstructor()->getMock(),
                 '/working/base/dir'
             )
         );
@@ -34,7 +36,7 @@ class JobProcessorTest extends TestCase
     public function testProcessing(): void
     {
         $executor = $this
-            ->getMockBuilder(Executor::class)
+            ->getMockBuilder(ExecutorInterface::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['run'])
             ->getMock();
@@ -46,7 +48,7 @@ class JobProcessorTest extends TestCase
             ->willReturn('/working/base/dir/jobdir/foo.pdf');
 
         $factory = $this
-            ->getMockBuilder(ExecutorFactory::class)
+            ->getMockBuilder(ExecutorFactoryInterface::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['createExecutor'])
             ->getMock();

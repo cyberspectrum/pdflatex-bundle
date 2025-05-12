@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CyberSpectrum\PdfLatexBundle\Test\Twig;
 
 use CyberSpectrum\PdfLatexBundle\Helper\TextUtils;
+use CyberSpectrum\PdfLatexBundle\Helper\TextUtilsInterface;
 use CyberSpectrum\PdfLatexBundle\Twig\Extension;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
@@ -42,7 +43,6 @@ class ExtensionTest extends TestCase
         );
 
         $reflection = new \ReflectionProperty(Extension::class, 'utils');
-        $reflection->setAccessible(true);
         $this->assertSame($utils, $reflection->getValue($extension));
     }
 
@@ -114,21 +114,21 @@ class ExtensionTest extends TestCase
     /** Test that empty values are not being passed. */
     public function testTexifyDoesNotPassEmptyString(): void
     {
-        $utils = $this->getMockBuilder(TextUtils::class)->setMethods(['parseText'])->getMock();
+        $utils = $this->getMockBuilder(TextUtilsInterface::class)->onlyMethods(['parseText'])->getMock();
         $utils->expects($this->never())->method('parseText');
 
         $extension = new Extension($utils);
-        $extension->texify('');
+        self::assertSame('', $extension->texify(''));
     }
 
     /** Test that empty values are not being passed. */
     public function testTexifyAllDoesNotPassEmptyString(): void
     {
-        $utils = $this->getMockBuilder(TextUtils::class)->setMethods(['parseText'])->getMock();
+        $utils = $this->getMockBuilder(TextUtilsInterface::class)->onlyMethods(['parseText'])->getMock();
         $utils->expects($this->never())->method('parseText');
 
         $extension = new Extension($utils);
-        $extension->texifyAll('');
+        self::assertSame('', $extension->texify(''));
     }
 
     /** Test that the escape method is called. */

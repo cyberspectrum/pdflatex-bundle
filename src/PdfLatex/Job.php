@@ -15,10 +15,10 @@ use function uniqid;
 /**
  * This class describes a pdflatex job.
  */
-class Job
+final class Job
 {
     /** The tex file to render. */
-    private FileInterface $texFile;
+    private readonly FileInterface $texFile;
 
     /** The name of the job. */
     private string $jobName;
@@ -28,34 +28,36 @@ class Job
      *
      * @var list<FileInterface>
      */
-    private array $assets = [];
+    private array $assets;
 
     /**
      * Additional include paths to be passed as TEXINPUTS environment variable.
      *
      * @var list<string>
      */
-    private $includePaths = [];
+    private array $includePaths;
 
     /**
      * Create a new instance.
      *
      * @param FileInterface $texFile The TeX file of this job.
-     * @param string|null   $jobName The job name (if empty a random name will get used).
+     * @param string       $jobName The job name (if empty a random name will get used).
      *
      * @throws InvalidArgumentException When the passed file is not a .tex file.
      */
-    public function __construct(FileInterface $texFile, string $jobName = null)
+    public function __construct(FileInterface $texFile, string $jobName = '')
     {
-        if ('.tex' !== substr($name = $texFile->getName(), -4)) {
+        if (!str_ends_with($name = $texFile->getName(), '.tex')) {
             throw new InvalidArgumentException('File ' . $name . ' does not have file extension ".tex"');
         }
-        if (empty($jobName)) {
+        if ('' === $jobName) {
             $jobName = uniqid('job-');
         }
 
         $this->texFile = $texFile;
         $this->jobName = $jobName;
+        $this->assets = [];
+        $this->includePaths = [];
     }
 
     /**
@@ -110,7 +112,7 @@ class Job
             throw new InvalidArgumentException('Not a directory: ' . $path);
         }
         // Allow recursive inclusion.
-        if ('//' === substr($path, -2)) {
+        if (str_ends_with($path, '//')) {
             $realPath .= '//';
         }
         $this->includePaths[] = $realPath;

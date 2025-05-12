@@ -5,25 +5,26 @@ declare(strict_types=1);
 namespace CyberSpectrum\PdfLatexBundle\Twig;
 
 use CyberSpectrum\PdfLatexBundle\Helper\TextUtils;
+use CyberSpectrum\PdfLatexBundle\Helper\TextUtilsInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
-use Twig\Extension\EscaperExtension;
+use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 
 /**
  * This class provides certain twig extensions.
  */
-class Extension extends AbstractExtension
+final class Extension extends AbstractExtension
 {
     /** The text utils to use. */
-    private TextUtils $utils;
+    private TextUtilsInterface $utils;
 
     /**
      * Create a new instance.
      *
-     * @param TextUtils|null $utils The text utils to use.
+     * @param TextUtilsInterface|null $utils The text utils to use.
      */
-    public function __construct(?TextUtils $utils = null)
+    public function __construct(?TextUtilsInterface $utils = null)
     {
         $this->utils = $utils ?: new TextUtils();
     }
@@ -35,32 +36,31 @@ class Extension extends AbstractExtension
      */
     public function addEscaperTo(Environment $environment): void
     {
-        $extension = $environment->getExtension(EscaperExtension::class);
-        $extension->setEscaper('tex', [$this, 'escape']);
+        $runtime = $environment->getRuntime(EscaperRuntime::class);
+
+        $runtime->setEscaper('tex', [$this, 'escape']);
     }
 
     /**
      * Escape the passed input.
      *
-     * @param Environment $twig    The twig environment.
-     * @param string|null $string  The string to escape.
-     * @param string|null $charset The charset.
-     *
-     * @return string
+     * @param string $string  The string to escape.
+     * @param string $charset The charset.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter) - The interface is dictated by twig.
+     * @psalm-suppress UnusedParam
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
-    public function escape(Environment $twig, string $string = null, string $charset = null)
+    public function escape(string $string, string $charset): string
     {
-        if (empty($string)) {
+        if ('' === $string) {
             return '';
         }
+
         return $this->texifyAll($string);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getFilters(): array
     {
         return [

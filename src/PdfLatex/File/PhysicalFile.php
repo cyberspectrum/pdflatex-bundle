@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex\File;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 use function basename;
 use function fclose;
@@ -15,19 +16,19 @@ use function sprintf;
 /**
  * This implements a physical file on local disk.
  */
-class PhysicalFile extends AbstractStreamedFile
+final class PhysicalFile extends AbstractStreamedFile
 {
     /** The file path. */
-    private string $path;
+    private readonly string $path;
 
-    /** The sub directory. */
-    private string $directory;
+    /** The subdirectory. */
+    private readonly string $directory;
 
     /**
      * Create a new instance.
      *
      * @param string $path      The file name.
-     * @param string $directory The optional sub directory.
+     * @param string $directory The optional subdirectory.
      *
      * @throws InvalidArgumentException When an invalid path has been passed.
      */
@@ -41,19 +42,25 @@ class PhysicalFile extends AbstractStreamedFile
         $this->directory = $directory;
     }
 
+    #[\Override]
     public function getName(): string
     {
         return basename($this->path);
     }
 
+    #[\Override]
     public function getDirectory(): string
     {
         return $this->directory;
     }
 
+    #[\Override]
     public function saveTo(string $directory): void
     {
         $source = fopen($this->path, 'rb');
+        if (false === $source) {
+            throw new RuntimeException('Could not open ' . $this->path);
+        }
 
         try {
             $this->save($source, $directory);

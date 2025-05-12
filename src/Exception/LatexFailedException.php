@@ -10,6 +10,8 @@ use Symfony\Component\Process\Process;
 
 /**
  * Exception for failed pdflatex processes.
+ *
+ * @api
  */
 class LatexFailedException extends RuntimeException
 {

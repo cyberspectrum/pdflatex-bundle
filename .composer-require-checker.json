@@ -17,8 +17,8 @@
     "void",
     "Twig\\Environment",
     "Twig\\Extension\\AbstractExtension",
-    "Twig\\Extension\\EscaperExtension",
     "Twig\\FileExtensionEscapingStrategy",
+    "Twig\\Runtime\\EscaperRuntime",
     "Twig\\TwigFilter"
   ]
 }
