@@ -1,79 +1,63 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex;
 
 use CyberSpectrum\PdfLatexBundle\PdfLatex\File\FileInterface;
+use InvalidArgumentException;
+
+use function is_dir;
+use function realpath;
+use function substr;
+use function uniqid;
 
 /**
  * This class describes a pdflatex job.
  */
-class Job
+final class Job
 {
-    /**
-     * The tex file to render.
-     *
-     * @var FileInterface
-     */
-    private $texFile = '';
+    /** The tex file to render. */
+    private readonly FileInterface $texFile;
 
-    /**
-     * The name of the job.
-     *
-     * @var string
-     */
-    private $jobName;
+    /** The name of the job. */
+    private readonly string $jobName;
 
     /**
      * The assets to add.
      *
-     * @var FileInterface[]
+     * @var list<FileInterface>
      */
-    private $assets = [];
+    private array $assets;
 
     /**
      * Additional include paths to be passed as TEXINPUTS environment variable.
      *
-     * @var string[]
+     * @var list<string>
      */
-    private $includePaths = [];
+    private array $includePaths;
 
     /**
      * Create a new instance.
      *
      * @param FileInterface $texFile The TeX file of this job.
-     * @param string        $jobName The job name (if empty a random name will get used).
+     * @param string       $jobName The job name (if empty a random name will get used).
      *
-     * @throws \InvalidArgumentException When the passed file is not a .tex file.
+     * @throws InvalidArgumentException When the passed file is not a .tex file.
      */
-    public function __construct(FileInterface $texFile, string $jobName = null)
+    public function __construct(FileInterface $texFile, string $jobName = '')
     {
-        if ('.tex' !== substr($name = $texFile->getName(), -4)) {
-            throw new \InvalidArgumentException('File ' . $name . ' does not have file extension ".tex"');
+        if (!str_ends_with($name = $texFile->getName(), '.tex')) {
+            throw new InvalidArgumentException('File ' . $name . ' does not have file extension ".tex"');
         }
-        if (empty($jobName)) {
+        if ('' === $jobName) {
             $jobName = uniqid('job-');
         }
 
         $this->texFile = $texFile;
         $this->jobName = $jobName;
+        $this->assets = [];
+        $this->includePaths = [];
     }
 
     /**
@@ -86,22 +70,16 @@ class Job
         return $this->texFile;
     }
 
-    /**
-     * Retrieve jobName.
-     *
-     * @return string
-     */
-    public function getJobName()
+    /** Retrieve jobName. */
+    public function getJobName(): string
     {
         return $this->jobName;
     }
 
     /**
-     * Add an include path.
+     * Add an asset.
      *
      * @param FileInterface $asset The asset to add.
-     *
-     * @return Job
      */
     public function addAsset(FileInterface $asset): self
     {
@@ -121,18 +99,21 @@ class Job
     }
 
     /**
-     * Add an include path.
+     * Add include path.
      *
      * @param string $path The path to add.
      *
-     * @throws \InvalidArgumentException When the path does not exist.
-     * @return Job
+     * @throws InvalidArgumentException When the path does not exist.
      */
     public function addIncludePath(string $path): self
     {
         $realPath = realpath($path);
-        if ((null === $realPath) || !is_dir($realPath)) {
-            throw new \InvalidArgumentException('Not a directory: ' . $path);
+        if ((false === $realPath) || !is_dir($realPath)) {
+            throw new InvalidArgumentException('Not a directory: ' . $path);
+        }
+        // Allow recursive inclusion.
+        if (str_ends_with($path, '//')) {
+            $realPath .= '//';
         }
         $this->includePaths[] = $realPath;
 
@@ -142,7 +123,7 @@ class Job
     /**
      * Retrieve includePaths.
      *
-     * @return string[]
+     * @return list<string>
      */
     public function getIncludePaths(): array
     {

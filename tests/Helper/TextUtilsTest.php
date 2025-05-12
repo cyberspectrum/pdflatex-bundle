@@ -1,22 +1,6 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\Helper;
 
@@ -30,11 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class TextUtilsTest extends TestCase
 {
-    /**
-     * Provide datasets for the parseText test.
-     *
-     * @return array
-     */
+    /** Provide datasets for the parseText test. */
     public function textParsingProvider(): array
     {
         return [
@@ -67,23 +47,17 @@ class TextUtilsTest extends TestCase
      * @param string $expected The expected result.
      * @param string $input    The input string.
      *
-     * @return void
-     *
      * @dataProvider textParsingProvider
      */
-    public function testTextParsing(string $expected, string $input)
+    public function testTextParsing(string $expected, string $input): void
     {
         $utils = new TextUtils();
 
         $this->assertSame($expected, $utils->parseText($input));
     }
 
-    /**
-     * Test the parseText() method with newline escaping.
-     *
-     * @return void
-     */
-    public function testTextParsingWithNewlineEscaping()
+    /** Test the parseText() method with newline escaping. */
+    public function testTextParsingWithNewlineEscaping(): void
     {
         $utils = new TextUtils();
 

@@ -1,27 +1,16 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\PdfLatex\File;
 
 use CyberSpectrum\PdfLatexBundle\PdfLatex\File\PhysicalFile;
 use CyberSpectrum\PdfLatexBundle\Test\TempDirTestCase;
+use InvalidArgumentException;
+
+use function file_get_contents;
+use function file_put_contents;
+use function touch;
 
 /**
  * This tests the PhysicalFile class.
@@ -30,12 +19,8 @@ use CyberSpectrum\PdfLatexBundle\Test\TempDirTestCase;
  */
 class PhysicalFileTest extends TempDirTestCase
 {
-    /**
-     * Test that the class can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the class can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         touch($filePath = $this->getTempDir() . DIRECTORY_SEPARATOR . 'foo.tex');
 
@@ -45,26 +30,18 @@ class PhysicalFileTest extends TempDirTestCase
         );
     }
 
-    /**
-     * Test that the instantiation throws an exception for invalid file path argument.
-     *
-     * @return void
-     */
-    public function testInstantiationThrowsExceptionForNonExistingSourceFile()
+    /** Test that the instantiation throws an exception for invalid file path argument. */
+    public function testInstantiationThrowsExceptionForNonExistingSourceFile(): void
     {
         $filePath = $this->getTempDir() . DIRECTORY_SEPARATOR . 'foo.tex';
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File ' . $filePath . ' does not exist.');
 
         new PhysicalFile($filePath, 'foo.tex');
     }
 
-    /**
-     * Test that the name is returned.
-     *
-     * @return void
-     */
-    public function testNameIsReturned()
+    /** Test that the name is returned. */
+    public function testNameIsReturned(): void
     {
         touch($filePath = $this->getTempDir() . DIRECTORY_SEPARATOR . 'foo.tex');
 
@@ -72,12 +49,8 @@ class PhysicalFileTest extends TempDirTestCase
         $this->assertSame('foo.tex', $file->getName());
     }
 
-    /**
-     * Test that the directory is returned.
-     *
-     * @return void
-     */
-    public function testDirectoryIsReturned()
+    /** Test that the directory is returned. */
+    public function testDirectoryIsReturned(): void
     {
         touch($filePath = $this->getTempDir() . DIRECTORY_SEPARATOR . 'foo.tex');
 
@@ -85,12 +58,8 @@ class PhysicalFileTest extends TempDirTestCase
         $this->assertSame('subdir', $file->getDirectory());
     }
 
-    /**
-     * Test that the name is returned.
-     *
-     * @return void
-     */
-    public function testSavesContentToDestination()
+    /** Test that the name is returned. */
+    public function testSavesContentToDestination(): void
     {
         file_put_contents($filePath = $this->getTempDir() . DIRECTORY_SEPARATOR . 'foo.tex', 'TESTING!');
 
@@ -98,11 +67,11 @@ class PhysicalFileTest extends TempDirTestCase
 
         $destDir  = $this->getTempDir();
         $destFile = $destDir . DIRECTORY_SEPARATOR . 'subdir/foo.tex';
-        $this->assertFileNotExists($destFile);
+        $this->assertFileDoesNotExist($destFile);
 
         $file->saveTo($destDir);
 
         $this->assertFileExists($destFile);
-        $this->assertSame('TESTING!', \file_get_contents($destFile));
+        $this->assertSame('TESTING!', file_get_contents($destFile));
     }
 }

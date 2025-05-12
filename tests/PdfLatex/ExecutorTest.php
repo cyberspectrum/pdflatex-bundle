@@ -1,29 +1,20 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\PdfLatex;
 
 use CyberSpectrum\PdfLatexBundle\Exception\LatexFailedException;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\Executor;
 use CyberSpectrum\PdfLatexBundle\Test\TempDirTestCase;
+use InvalidArgumentException;
 use Symfony\Component\Process\ExecutableFinder;
+
+use function dirname;
+use function explode;
+use function file_get_contents;
+use function file_put_contents;
+use function touch;
 
 /**
  * This tests the PdfLatexExecutor class.
@@ -32,12 +23,8 @@ use Symfony\Component\Process\ExecutableFinder;
  */
 class ExecutorTest extends TempDirTestCase
 {
-    /**
-     * Test that the class can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the class can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $tmpDir = $this->getTempDir();
         touch($tmpDir . DIRECTORY_SEPARATOR . 'foo.tex');
@@ -53,58 +40,42 @@ class ExecutorTest extends TempDirTestCase
         );
     }
 
-    /**
-     * Test that an exception is thrown when the binary does not exist.
-     *
-     * @return void
-     */
-    public function testInstantiationThrowsExceptionForNonExistentBinary()
+    /** Test that an exception is thrown when the binary does not exist. */
+    public function testInstantiationThrowsExceptionForNonExistentBinary(): void
     {
         $tmpDir = $this->getTempDir();
         touch($tmpDir . DIRECTORY_SEPARATOR . 'foo.tex');
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File ' . $tmpDir . '/does/not/exist is not executable.');
 
         new Executor($tmpDir . '/does/not/exist', $tmpDir, 'foo.tex', []);
     }
 
-    /**
-     * Test that an exception is thrown when the tex file has an invalid file extension.
-     *
-     * @return void
-     */
-    public function testInstantiationThrowsExceptionForInvalidTexFileExtension()
+    /** Test that an exception is thrown when the tex file has an invalid file extension. */
+    public function testInstantiationThrowsExceptionForInvalidTexFileExtension(): void
     {
         $tmpDir = $this->getTempDir();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File foo.bar does not have file extension ".tex".');
 
         new Executor('/bin/false', $tmpDir, 'foo.bar', []);
     }
 
-    /**
-     * Test that an exception is thrown when the tex file does not exist.
-     *
-     * @return void
-     */
-    public function testInstantiationThrowsExceptionForNonExistentTexFile()
+    /** Test that an exception is thrown when the tex file does not exist. */
+    public function testInstantiationThrowsExceptionForNonExistentTexFile(): void
     {
         $tmpDir = $this->getTempDir();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('File ' . $tmpDir . '/foo.tex does not exist.');
 
         new Executor('/bin/false', $tmpDir, 'foo.tex', []);
     }
 
-    /**
-     * Test the execution.
-     *
-     * @return void
-     */
-    public function testRunThrowsExceptionWhenExecutionFailed()
+    /** Test the execution. */
+    public function testRunThrowsExceptionWhenExecutionFailed(): void
     {
         $tmpDir = $this->getTempDir();
         touch($tmpDir . DIRECTORY_SEPARATOR . 'foo.tex');
@@ -116,19 +87,13 @@ class ExecutorTest extends TempDirTestCase
         $executor->run();
     }
 
-    /**
-     * Test the execution.
-     *
-     * @return void
-     */
-    public function testRunWithRealPdflatex()
+    /** Test the execution. */
+    public function testRunWithRealPdflatex(): void
     {
         $finder = new ExecutableFinder();
 
         if (null === ($binary = $finder->find('pdflatex'))) {
             $this->markTestSkipped('Could not find pdflatex');
-
-            return;
         }
 
         $tmpDir = $this->getTempDir();
@@ -144,12 +109,8 @@ class ExecutorTest extends TempDirTestCase
         $this->assertFileExists($tmpDir . DIRECTORY_SEPARATOR . 'foo.pdf');
     }
 
-    /**
-     * Test the execution.
-     *
-     * @return void
-     */
-    public function testExecutorSetsEnvironment()
+    /** Test the execution. */
+    public function testExecutorSetsEnvironment(): void
     {
         $tmpDir = $this->getTempDir();
         file_put_contents(
@@ -169,7 +130,7 @@ class ExecutorTest extends TempDirTestCase
         $this->assertFileExists($tmpDir . DIRECTORY_SEPARATOR . 'foo.pdf');
         $contents = explode("\n", file_get_contents($tmpDir . DIRECTORY_SEPARATOR . 'foo.pdf'));
         $this->assertSame(
-            'TEXINPUTS=/include/path' . PATH_SEPARATOR . '/include/path2',
+            'TEXINPUTS=/include/path' . PATH_SEPARATOR . '/include/path2' . PATH_SEPARATOR,
             $contents[0]
         );
         $this->assertSame(

@@ -1,22 +1,6 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex;
 
@@ -25,29 +9,19 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 /**
  * This class processes jobs.
  */
-class JobProcessor
+final readonly class JobProcessor
 {
-    /**
-     * The executor factory.
-     *
-     * @var ExecutorFactory
-     */
-    private $executorFactory;
+    /** The executor factory. */
+    private ExecutorFactoryInterface $executorFactory;
+
+    /** The temporary base directory. */
+    private string $tempDirectory;
 
     /**
-     * The temporary base directory.
-     *
-     * @var string
+     * @param ExecutorFactoryInterface $executorFactory The executor factory.
+     * @param string                   $tempDirectory   The temporary directory.
      */
-    private $tempDirectory;
-
-    /**
-     * Create a new instance.
-     *
-     * @param ExecutorFactory $executorFactory The executor factory.
-     * @param string          $tempDirectory   The temporary directory.
-     */
-    public function __construct(ExecutorFactory $executorFactory, string $tempDirectory)
+    public function __construct(ExecutorFactoryInterface $executorFactory, string $tempDirectory)
     {
         $this->executorFactory = $executorFactory;
         $this->tempDirectory   = $tempDirectory;
@@ -57,8 +31,6 @@ class JobProcessor
      * Process the passed TeX file and return the path to the generated .pdf.
      *
      * @param Job $latexJob The job to process.
-     *
-     * @return string
      */
     public function process(Job $latexJob): string
     {
@@ -82,10 +54,8 @@ class JobProcessor
      * Generate a response containing a PDF document.
      *
      * @param Job $latexJob The job to process.
-     *
-     * @return BinaryFileResponse
      */
-    public function createPdfResponse(Job $latexJob)
+    public function createPdfResponse(Job $latexJob): BinaryFileResponse
     {
         $pdfLocation = $this->process($latexJob);
         $response    = new BinaryFileResponse($pdfLocation);

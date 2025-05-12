@@ -1,42 +1,24 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\PdfLatex\File;
 
 use CyberSpectrum\PdfLatexBundle\PdfLatex\File\CallbackFile;
+use CyberSpectrum\PdfLatexBundle\Test\TempDirTestCase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This tests the CallbackFile class.
  *
  * @covers \CyberSpectrum\PdfLatexBundle\PdfLatex\File\CallbackFile
  */
-class CallbackFileTest extends TestCase
+class CallbackFileTest extends TempDirTestCase
 {
-    /**
-     * Test that the class can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the class can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $callback = function () {
             Assert::fail('Callback should not have been called');
@@ -48,12 +30,8 @@ class CallbackFileTest extends TestCase
         );
     }
 
-    /**
-     * Test that the name is returned.
-     *
-     * @return void
-     */
-    public function testNameIsReturned()
+    /** Test that the name is returned. */
+    public function testNameIsReturned(): void
     {
         $callback = function () {
             Assert::fail('Callback should not have been called');
@@ -63,12 +41,8 @@ class CallbackFileTest extends TestCase
         $this->assertSame('foo.tex', $file->getName());
     }
 
-    /**
-     * Test that the directory is returned.
-     *
-     * @return void
-     */
-    public function testDirectoryIsReturned()
+    /** Test that the directory is returned. */
+    public function testDirectoryIsReturned(): void
     {
         $callback = function () {
             Assert::fail('Callback should not have been called');
@@ -79,21 +53,24 @@ class CallbackFileTest extends TestCase
         $this->assertSame('subdir', $file->getDirectory());
     }
 
-    /**
-     * Test that the name is returned.
-     *
-     * @return void
-     */
-    public function testSavesContentToDestination()
+    /** Test that the name is returned. */
+    public function testSavesContentToDestination(): void
     {
-        $callback = function ($directory, $name, $subdir) {
-            Assert::assertSame('destdir', $directory);
+        $callback = function ($directory, $name) {
+            Assert::assertSame($this->getTempDir() . DIRECTORY_SEPARATOR . 'subdir', $directory);
             Assert::assertSame('foo.tex', $name);
-            Assert::assertSame('subdir', $subdir);
+
+            $filesystem = new Filesystem();
+            $filesystem->mkdir($directory);
+            file_put_contents($directory . DIRECTORY_SEPARATOR . $name, 'success');
         };
 
         $file = new CallbackFile($callback, 'foo.tex', 'subdir');
 
-        $file->saveTo('destdir');
+        $file->saveTo($this->getTempDir());
+
+        $absolutePath = $this->getTempDir() . DIRECTORY_SEPARATOR . 'subdir' . DIRECTORY_SEPARATOR . 'foo.tex';
+        self::assertFileExists($absolutePath);
+        self::assertSame('success', file_get_contents($absolutePath));
     }
 }

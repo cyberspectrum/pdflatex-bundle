@@ -1,22 +1,6 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\DependencyInjection\Compiler;
 
@@ -26,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Twig\Environment;
 
 /**
  * This tests the compiler pass.
@@ -34,12 +19,8 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class SetAutoescapePassTest extends TestCase
 {
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the compiler pass can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\Compiler\SetAutoescapePass',
@@ -47,16 +28,12 @@ class SetAutoescapePassTest extends TestCase
         );
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testAbstainsWithoutTwig()
+    /** Test that the compiler pass can be instantiated. */
+    public function testAbstainsWithoutTwig(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['getDefinition'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
         $container
@@ -68,12 +45,8 @@ class SetAutoescapePassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testAbstainsWhenAutoescapeIsString()
+    /** Test that the compiler pass can be instantiated. */
+    public function testAbstainsWhenAutoescapeIsString(): void
     {
         $twig = new Definition('\Twig\Class', ['loader', ['autoescape' => 'html']]);
 
@@ -87,12 +60,8 @@ class SetAutoescapePassTest extends TestCase
         $this->assertSame(['autoescape' => 'html'], $twig->getArgument(1));
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testInjectsWhenAutoescapeIsName()
+    /** Test that the compiler pass can be instantiated. */
+    public function testInjectsWhenAutoescapeIsName(): void
     {
         $twig = new Definition('\Twig\Environment', ['loader', ['autoescape' => 'name']]);
 
@@ -100,7 +69,7 @@ class SetAutoescapePassTest extends TestCase
 
         $container = new ContainerBuilder();
         $container->setDefinition('twig', $twig);
-        $container->setDefinition('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy', $strategy);
+        $container->setDefinition(FileExtensionEscapingStrategy::class, $strategy);
 
         $pass = new SetAutoescapePass();
 
@@ -109,30 +78,23 @@ class SetAutoescapePassTest extends TestCase
         $options = $twig->getArgument(1);
 
         $this->assertInstanceOf(Reference::class, $options['autoescape'][0]);
-        $this->assertSame(
-            'cyberspectrum.pdflatex.twig.file_extension_escaping_strategy',
-            (string) $options['autoescape'][0]
-        );
+        $this->assertSame(FileExtensionEscapingStrategy::class, (string) $options['autoescape'][0]);
         $this->assertSame('guess', $options['autoescape'][1]);
 
         $default = $strategy->getArgument(0);
-        $this->assertSame(['\Twig\FileExtensionEscapingStrategy', 'guess'], $default);
+        $this->assertSame([\Twig\FileExtensionEscapingStrategy::class, 'guess'], $default);
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testInjectsWhenAutoescapeIsFalse()
+    /** Test that the compiler pass can be instantiated. */
+    public function testInjectsWhenAutoescapeIsFalse(): void
     {
-        $twig = new Definition('\Twig\Environment', ['loader', ['autoescape' => false]]);
+        $twig = new Definition(Environment::class, ['loader', ['autoescape' => false]]);
 
         $strategy = new Definition(FileExtensionEscapingStrategy::class, ['something']);
 
         $container = new ContainerBuilder();
         $container->setDefinition('twig', $twig);
-        $container->setDefinition('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy', $strategy);
+        $container->setDefinition(FileExtensionEscapingStrategy::class, $strategy);
 
         $pass = new SetAutoescapePass();
 
@@ -141,32 +103,25 @@ class SetAutoescapePassTest extends TestCase
         $options = $twig->getArgument(1);
 
         $this->assertInstanceOf(Reference::class, $options['autoescape'][0]);
-        $this->assertSame(
-            'cyberspectrum.pdflatex.twig.file_extension_escaping_strategy',
-            (string) $options['autoescape'][0]
-        );
+        $this->assertSame(FileExtensionEscapingStrategy::class, (string) $options['autoescape'][0]);
         $this->assertSame('guess', $options['autoescape'][1]);
 
         $default = $strategy->getArgument(0);
         $this->assertSame(false, $default);
     }
 
-    /**
-     * Test that the compiler pass can be instantiated.
-     *
-     * @return void
-     */
-    public function testInjectsWhenAutoescapeIsService()
+    /** Test that the compiler pass can be instantiated. */
+    public function testInjectsWhenAutoescapeIsService(): void
     {
         $realStrategy = [new Reference('foo.bar'), 'baz'];
 
-        $twig = new Definition('\Twig\Environment', ['loader', ['autoescape' => $realStrategy]]);
+        $twig = new Definition(Environment::class, ['loader', ['autoescape' => $realStrategy]]);
 
         $strategy = new Definition(FileExtensionEscapingStrategy::class, [false]);
 
         $container = new ContainerBuilder();
         $container->setDefinition('twig', $twig);
-        $container->setDefinition('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy', $strategy);
+        $container->setDefinition(FileExtensionEscapingStrategy::class, $strategy);
 
         $pass = new SetAutoescapePass();
 
@@ -175,10 +130,7 @@ class SetAutoescapePassTest extends TestCase
         $options = $twig->getArgument(1);
 
         $this->assertInstanceOf(Reference::class, $options['autoescape'][0]);
-        $this->assertSame(
-            'cyberspectrum.pdflatex.twig.file_extension_escaping_strategy',
-            (string) $options['autoescape'][0]
-        );
+        $this->assertSame(FileExtensionEscapingStrategy::class, (string) $options['autoescape'][0]);
         $this->assertSame('guess', $options['autoescape'][1]);
 
         $default = $strategy->getArgument(0);

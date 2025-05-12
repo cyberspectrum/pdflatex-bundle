@@ -1,25 +1,11 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\DependencyInjection;
 
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor;
 use RuntimeException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,29 +16,28 @@ use Symfony\Component\Process\ExecutableFinder;
 /**
  * This is the extension.
  */
-class PdfLatexExtension extends Extension
+final class PdfLatexExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    #[\Override]
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
-        $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
+        $configuration = $this->getConfiguration($configs, $container);
+        assert($configuration instanceof Configuration);
+        /** @var array{pdflatex_binary: string|null, cache_dir: string} $config */
+        $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter(
-            'cyberspectrum.pdflatex.binary',
-            $config['pdflatex_binary'] ?: $this->getDefaultBinary()
-        );
+        $pdfLatexBinary = $config['pdflatex_binary'] ?? $this->getDefaultBinary();
+        $container->getDefinition(ExecutorFactory::class)->setArgument('$latexBinary', $pdfLatexBinary);
+        $container->getDefinition(JobProcessor::class)->setArgument('$tempDirectory', $config['cache_dir']);
     }
 
     /**
      * Find the default pdflatex binary.
      *
      * @throws RuntimeException When the processor could not be found.
-     * @return string
      */
     private function getDefaultBinary(): string
     {

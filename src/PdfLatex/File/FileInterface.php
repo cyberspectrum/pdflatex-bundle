@@ -1,24 +1,10 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex\File;
+
+use RuntimeException;
 
 /**
  * This interface describes a PdfLatexFile.
@@ -27,18 +13,10 @@ namespace CyberSpectrum\PdfLatexBundle\PdfLatex\File;
  */
 interface FileInterface
 {
-    /**
-     * Return the file name (i.e. "some-file.tex").
-     *
-     * @return string
-     */
+    /** Return the file name (i.e. "some-file.tex"). */
     public function getName(): string;
 
-    /**
-     * Retrieve the relative directory (i.e. "images").
-     *
-     * @return string
-     */
+    /** Retrieve the relative directory (i.e. "images"). */
     public function getDirectory(): string;
 
     /**
@@ -48,8 +26,7 @@ interface FileInterface
      *
      * @param string $directory The directory to save to.
      *
-     * @throws \RuntimeException When anything goes wrong.
-     * @return void
+     * @throws RuntimeException When anything goes wrong.
      */
-    public function saveTo(string $directory);
+    public function saveTo(string $directory): void;
 }

@@ -1,36 +1,16 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Helper;
 
 /**
  * This class pre-processes text for usage in TeX documents.
  */
-class TextUtils
+final readonly class TextUtils implements TextUtilsInterface
 {
-    /**
-     * List of UTF-8 chars and their TeX representation.
-     *
-     * @var array
-     */
-    public static $charMap = [
+    /** List of UTF-8 chars and their TeX representation. */
+    public const CHARMAP = [
         '\\' => '\\backslash{}',
         '{'  => '\\{',
         '}'  => '\\}',
@@ -45,91 +25,84 @@ class TextUtils
         '#'  => '\\#',
         '_'  => '\\_',
         '^'  => '\\^{}',
-        '°'  => '\$^{\\circ}\$',
+        '°'  => '$^{\\circ}$',
         '>'  => '\\textgreater{}',
         '<'  => '\\textless{}',
         '~'  => '\\textasciitilde{}',
-        'ä'  => '\\"a',
-        'á'  => '\\\'a',
-        'à'  => '\\`a',
-        'â'  => '\\^a',
-        'ã'  => '\\~a',
-        'Ä'  => '\\"A',
-        'Á'  => '\\\'A',
-        'À'  => '\\`A',
-        'Â'  => '\\^A',
-        'Ã'  => '\\~A',
-        'ë'  => '\\"e',
-        'é'  => '\\\'e',
-        'è'  => '\\`e',
-        'ê'  => '\\^e',
-        'Ë'  => '\\"E',
-        'É'  => '\\\'E',
-        'È'  => '\\`E',
-        'Ê'  => '\\^E',
-        'ï'  => '\\"i',
-        'í'  => '\\\'i',
-        'ì'  => '\\`i',
-        'î'  => '\\^i',
-        'Ï'  => '\\"I',
-        'Í'  => '\\\'I',
-        'Ì'  => '\\`I',
-        'Î'  => '\\^I',
-        'ö'  => '\\"o',
-        'ó'  => '\\\'o',
-        'ő'  => '\\H{o}',
-        'ò'  => '\\`o',
-        'ô'  => '\\^o',
-        'õ'  => '\\~o',
-        'Ö'  => '\\"O',
-        'Ó'  => '\\\'O',
-        'Ő'  => '\\H{O}',
-        'Ò'  => '\\`O',
-        'Ô'  => '\\^O',
-        'Õ'  => '\\~O',
-        'ü'  => '\\"u',
-        'ú'  => '\\\'u',
-        'ű'  => '\\H{u}',
-        'ù'  => '\\`u',
-        'û'  => '\\^u',
-        'Ü'  => '\\"U',
-        'Ú'  => '\\\'U',
-        'Ű'  => '\\H{U}',
-        'Ù'  => '\\`U',
-        'Û'  => '\\^U',
-        'ñ'  => '\\~n',
-        'ß'  => '{\\ss}',
-        'ç'  => '\\c{c}',
-        'Ç'  => '\\c{C}',
-        'ș'  => '\\c{s}',
-        'Ș'  => '\\c{S}',
-        'ŭ'  => '\\u{u}',
-        'Ŭ'  => '\\u{U}',
-        'ă'  => '\\u{a}',
-        'Ă'  => '\\u{A}',
-        'ă'  => '\\v{a}',
-        'Ă'  => '\\v{A}',
-        'š'  => '\\v{s}',
-        'Š'  => '\\v{S}',
-        'Ø'  => '{\\O}',
-        'ø'  => '{\\o}',
         '²'  => '\\textsuperscript{2}',
         '³'  => '\\textsuperscript{3}',
+        'À'  => '\\`A',
+        'Á'  => '\\\'A',
+        'Â'  => '\\^A',
+        'Ã'  => '\\~A',
+        'Ä'  => '\\"A',
+        'Ç'  => '\\c{C}',
+        'È'  => '\\`E',
+        'É'  => '\\\'E',
+        'Ê'  => '\\^E',
+        'Ë'  => '\\"E',
+        'Ì'  => '\\`I',
+        'Í'  => '\\\'I',
+        'Î'  => '\\^I',
+        'Ï'  => '\\"I',
+        'Ò'  => '\\`O',
+        'Ó'  => '\\\'O',
+        'Ô'  => '\\^O',
+        'Õ'  => '\\~O',
+        'Ö'  => '\\"O',
+        'Ø'  => '{\\O}',
+        'Ù'  => '\\`U',
+        'Ú'  => '\\\'U',
+        'Û'  => '\\^U',
+        'Ü'  => '\\"U',
+        'ß'  => '{\\ss}',
+        'à'  => '\\`a',
+        'á'  => '\\\'a',
+        'â'  => '\\^a',
+        'ã'  => '\\~a',
+        'ä'  => '\\"a',
+        'ç'  => '\\c{c}',
+        'è'  => '\\`e',
+        'é'  => '\\\'e',
+        'ê'  => '\\^e',
+        'ë'  => '\\"e',
+        'ì'  => '\\`i',
+        'í'  => '\\\'i',
+        'î'  => '\\^i',
+        'ï'  => '\\"i',
+        'ñ'  => '\\~n',
+        'ò'  => '\\`o',
+        'ó'  => '\\\'o',
+        'ô'  => '\\^o',
+        'õ'  => '\\~o',
+        'ö'  => '\\"o',
+        'ø'  => '{\\o}',
+        'ù'  => '\\`u',
+        'ú'  => '\\\'u',
+        'û'  => '\\^u',
+        'ü'  => '\\"u',
+        'Ă'  => '\\u{A}',
+        // 'Ă'  => '\\v{A}',
+        'ă'  => '\\u{a}',
+        // 'ă'  => '\\v{a}',
+        'Ő'  => '\\H{O}',
+        'ő'  => '\\H{o}',
+        'Š'  => '\\v{S}',
+        'š'  => '\\v{s}',
+        'Ŭ'  => '\\u{U}',
+        'ŭ'  => '\\u{u}',
+        'Ű'  => '\\H{U}',
+        'ű'  => '\\H{u}',
+        'Ș'  => '\\c{S}',
+        'ș'  => '\\c{s}',
     ];
 
-    /**
-     * Parse the text and replace known special latex characters correctly.
-     *
-     * @param string $text          The string that needs to be parsed.
-     * @param bool   $escapeNewLine If set, newline characters will be replaced by LaTeX entities (default false).
-     *
-     * @return string
-     */
-    public function parseText(string $text, bool $escapeNewLine = false)
+    #[\Override]
+    public function parseText(string $text, bool $escapeNewLine = false): string
     {
         // Try to replace HTML entities
         $text = html_entity_decode($text, ENT_QUOTES, 'utf-8');
-        $text = strtr($text, self::$charMap);
+        $text = strtr($text, self::CHARMAP);
 
         // New lines if required.
         if ($escapeNewLine) {

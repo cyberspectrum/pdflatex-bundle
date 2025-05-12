@@ -1,22 +1,6 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Exception;
 
@@ -26,23 +10,15 @@ use Symfony\Component\Process\Process;
 
 /**
  * Exception for failed pdflatex processes.
+ *
+ * @api
  */
 class LatexFailedException extends RuntimeException
 {
-    /**
-     * The failed process.
-     *
-     * @var Process
-     */
-    private $process;
+    /** The failed process. */
+    private Process $process;
 
-    /**
-     * Create a new instance.
-     *
-     * @param Process $process The failed process.
-     *
-     * @throws InvalidArgumentException When the passed process was successful.
-     */
+    /** @throws InvalidArgumentException When the passed process was successful. */
     public function __construct(Process $process)
     {
         if ($process->isSuccessful()) {
@@ -52,9 +28,9 @@ class LatexFailedException extends RuntimeException
         $error = sprintf(
             'The command "%s" failed.' . "\n\nExit Code: %s(%s)\n\nWorking directory: %s",
             $process->getCommandLine(),
-            $process->getExitCode(),
-            $process->getExitCodeText(),
-            $process->getWorkingDirectory()
+            (int) $process->getExitCode(),
+            (string) $process->getExitCodeText(),
+            (string) $process->getWorkingDirectory()
         );
 
         if (!$process->isOutputDisabled()) {
@@ -70,28 +46,19 @@ class LatexFailedException extends RuntimeException
         $this->process = $process;
     }
 
-    /**
-     * Retrieve the process.
-     *
-     * @return Process
-     */
-    public function getProcess()
+    public function getProcess(): Process
     {
         return $this->process;
     }
 
-    /**
-     * Retrieve the error output.
-     *
-     * @return mixed
-     */
-    public function getLatexError()
+    /** Retrieve the error output. */
+    public function getLatexError(): string
     {
         $output = $this->process->getOutput();
         $errors = $this->process->getErrorOutput();
 
         return str_replace(
-            $this->process->getWorkingDirectory(),
+            (string) $this->process->getWorkingDirectory(),
             '',
             $output . $errors
         );

@@ -1,44 +1,49 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Twig;
 
+use InvalidArgumentException;
+
+use function call_user_func;
+use function in_array;
+use function is_string;
+use function pathinfo;
+use function substr;
+
 /**
  * This class injects a tex escaping strategy.
+ *
+ * @psalm-type TCallback=callable(string): (false|string)
  */
-class FileExtensionEscapingStrategy
+final class FileExtensionEscapingStrategy
 {
     /**
      * The default strategy to use.
      *
-     * @var string|callable|false
+     * @var TCallback
      */
     private $defaultStrategy;
 
     /**
      * Create a new instance.
      *
-     * @param string|callable|false $defaultStrategy The default strategy to use when not a .tex file.
+     * @param string|TCallback|false $defaultStrategy The default strategy to use when not a .tex file.
      */
     public function __construct($defaultStrategy)
     {
+        if (!is_callable($defaultStrategy)) {
+            /** @psalm-suppress DocblockTypeContradiction */
+            if (!(is_string($defaultStrategy) || false === $defaultStrategy)) {
+                throw new InvalidArgumentException('Default strategy must be callable, string or false');
+            }
+
+            $this->defaultStrategy = static fn (): string|false => $defaultStrategy;
+
+            return;
+        }
+
         $this->defaultStrategy = $defaultStrategy;
     }
 
@@ -51,7 +56,7 @@ class FileExtensionEscapingStrategy
      *
      * @return string|false The escaping strategy name to use or false to disable
      */
-    public function guess(string $name)
+    public function guess(string $name): string|false
     {
         // See \Twig_FileExtensionEscapingStrategy::guess
         if (in_array(substr($name, -1), ['/', '\\'])) {
@@ -60,7 +65,7 @@ class FileExtensionEscapingStrategy
         }
 
         $realName = $name;
-        if ('.twig' === substr($name, -5)) {
+        if (str_ends_with($name, '.twig')) {
             $name = substr($name, 0, -5);
         }
 
@@ -69,10 +74,6 @@ class FileExtensionEscapingStrategy
             return 'tex';
         }
 
-        if (false !== $this->defaultStrategy && !is_string($this->defaultStrategy)) {
-            return call_user_func($this->defaultStrategy, $realName);
-        }
-
-        return $this->defaultStrategy;
+        return call_user_func($this->defaultStrategy, $realName);
     }
 }

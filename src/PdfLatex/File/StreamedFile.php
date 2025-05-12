@@ -1,29 +1,18 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\PdfLatex\File;
+
+use InvalidArgumentException;
+
+use function is_resource;
+use function sprintf;
 
 /**
  * This implements a file from a stream.
  */
-class StreamedFile extends AbstractStreamedFile
+final class StreamedFile extends AbstractStreamedFile
 {
     /**
      * The stream.
@@ -32,34 +21,27 @@ class StreamedFile extends AbstractStreamedFile
      */
     private $stream;
 
-    /**
-     * The file name.
-     *
-     * @var string
-     */
-    private $name;
+    /** The file name. */
+    private readonly string $name;
 
-    /**
-     * The sub directory.
-     *
-     * @var string
-     */
-    private $directory;
+    /** The subdirectory. */
+    private readonly string $directory;
 
     /**
      * Create a new instance.
      *
      * @param resource $stream    The stream to use.
      * @param string   $name      The file name.
-     * @param string   $directory The optional sub directory.
+     * @param string   $directory The optional subdirectory.
      *
-     * @throws \InvalidArgumentException When no resource has been passed.
+     * @throws InvalidArgumentException When no resource has been passed.
      */
     public function __construct($stream, string $name, string $directory = '')
     {
-        if (false === \is_resource($stream)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Argument must be a valid resource type. %s given.', gettype($stream))
+        /** @psalm-suppress DocblockTypeContradiction */
+        if (!is_resource($stream)) {
+            throw new InvalidArgumentException(
+                sprintf('Argument must be a valid resource type. %s given.', gettype($stream))
             );
         }
 
@@ -68,28 +50,20 @@ class StreamedFile extends AbstractStreamedFile
         $this->directory = $directory;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[\Override]
     public function getDirectory(): string
     {
         return $this->directory;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @throws \RuntimeException When anything goes wrong.
-     */
-    public function saveTo(string $directory)
+    #[\Override]
+    public function saveTo(string $directory): void
     {
         $this->save($this->stream, $directory);
     }

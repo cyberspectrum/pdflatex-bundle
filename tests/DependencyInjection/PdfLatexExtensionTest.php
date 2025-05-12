@@ -1,30 +1,23 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\DependencyInjection;
 
 use CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor;
+use CyberSpectrum\PdfLatexBundle\Twig\Extension;
+use CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\Extension as SymfonyExtension;
+
+use function dirname;
+use function getenv;
+use function putenv;
 
 /**
  * This tests the Configuration class.
@@ -33,127 +26,112 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
  */
 class PdfLatexExtensionTest extends TestCase
 {
-    /**
-     * Keep $PATH environment.
-     *
-     * @var string
-     */
-    private static $path;
+    /** Keep $PATH environment. */
+    private static string $path;
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         self::$path = getenv('PATH');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         putenv('PATH=' . self::$path);
         parent::tearDownAfterClass();
     }
 
-    /**
-     * Test that the bundle can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the bundle can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\DependencyInjection\PdfLatexExtension',
             $extension = new PdfLatexExtension()
         );
-        $this->assertInstanceOf(Extension::class, $extension);
+        self::assertInstanceOf(SymfonyExtension::class, $extension);
     }
 
-    /**
-     * Test that the extension uses path override.
-     *
-     * @return void
-     */
-    public function testLoadReturnsOverriddenPathToBinary()
+    /** Test that the extension uses path override. */
+    public function testLoadReturnsOverriddenPaths(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['setParameter'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
+        $factory = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $factory->expects(self::once())->method('setArgument')->with('$latexBinary', '/bin/false');
+        $processor = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $processor->expects(self::once())->method('setArgument')->with('$tempDirectory', '/tmp/path');
+
         $container
-            ->expects($this->once())
-            ->method('setParameter')
-            ->with('cyberspectrum.pdflatex.binary', '/bin/false');
+            ->expects(self::exactly(2))
+            ->method('getDefinition')
+            ->will(self::returnValueMap([
+                [ExecutorFactory::class, $factory],
+                [JobProcessor::class, $processor],
+            ]));
 
         $extension = new PdfLatexExtension();
-        $extension->load(
-            [
-                'cs_pdflatex' => [
-                    'pdflatex_binary' => '/bin/false',
-                ],
-            ],
-            $container
-        );
+        $extension->load([['pdflatex_binary' => '/bin/false', 'cache_dir' => '/tmp/path']], $container);
     }
 
-    /**
-     * Test that the extension uses search path by default.
-     *
-     * @return void
-     */
-    public function testLoadReturnsBinaryFromSearchPath()
+    /** Test that the extension uses search path by default. */
+    public function testLoadReturnsBinaryFromSearchPath(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['setParameter'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
         putenv('PATH=' . ($dir = dirname(__DIR__) . '/fixtures'));
 
+        $factory = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $factory
+            ->expects(self::once())
+            ->method('setArgument')
+            ->with('$latexBinary', $dir . '/pdflatex');
+        $processor = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
+        $processor
+            ->expects(self::once())
+            ->method('setArgument')
+            ->with('$tempDirectory', '%kernel.cache_dir%/pdflatex');
+
         $container
-            ->expects($this->once())
-            ->method('setParameter')
-            ->with('cyberspectrum.pdflatex.binary', $dir . '/pdflatex');
+            ->expects(self::exactly(2))
+            ->method('getDefinition')
+            ->will(self::returnValueMap([
+                [ExecutorFactory::class, $factory],
+                [JobProcessor::class, $processor],
+            ]));
 
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
     }
 
-    /**
-     * Test that the extension throws an exception when no pdflatex is found.
-     *
-     * @return void
-     */
-    public function testLoadThrowsExceptionWhenNoBinaryFound()
+    /** Test that the extension throws an exception when no pdflatex is found. */
+    public function testLoadThrowsExceptionWhenNoBinaryFound(): void
     {
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['setParameter'])
+            ->onlyMethods(['getDefinition'])
             ->getMock();
 
         putenv('PATH=');
 
         $container
-            ->expects($this->never())
-            ->method('setParameter');
+            ->expects(self::never())
+            ->method('getDefinition');
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Could not find a pdflatex binary.');
+        self::expectException(RuntimeException::class);
+        self::expectExceptionMessage('Could not find a pdflatex binary.');
 
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
     }
 
-    /**
-     * Test that the services are being registered.
-     *
-     * @return void
-     */
-    public function testRegistersServices()
+    /** Test that the services are being registered. */
+    public function testRegistersServices(): void
     {
         $container = new ContainerBuilder();
 
@@ -162,18 +140,14 @@ class PdfLatexExtensionTest extends TestCase
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
 
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.executor_factory'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.twig.extension'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy'));
+        self::assertTrue($container->has(ExecutorFactory::class));
+        self::assertTrue($container->has(JobProcessor::class));
+        self::assertTrue($container->has(Extension::class));
+        self::assertTrue($container->has(FileExtensionEscapingStrategy::class));
     }
 
-    /**
-     * Test that the container can be compiled.
-     *
-     * @return void
-     */
-    public function testContainerCanBeCompiled()
+    /** Test that the container can be compiled. */
+    public function testContainerCanBeCompiled(): void
     {
         $container = new ContainerBuilder();
         $container->setParameter('kernel.cache_dir', '/does/not/exist');
@@ -184,9 +158,9 @@ class PdfLatexExtensionTest extends TestCase
 
         $container->compile();
 
-        $this->assertFalse($container->has('cyberspectrum.pdflatex.executor_factory'));
-        $this->assertTrue($container->has('cyberspectrum.pdflatex.processor'));
-        $this->assertFalse($container->has('cyberspectrum.pdflatex.twig.extension'));
-        $this->assertFalse($container->has('cyberspectrum.pdflatex.twig.file_extension_escaping_strategy'));
+        self::assertFalse($container->has(ExecutorFactory::class));
+        self::assertTrue($container->has(JobProcessor::class));
+        self::assertFalse($container->has(Extension::class));
+        self::assertFalse($container->has(FileExtensionEscapingStrategy::class));
     }
 }

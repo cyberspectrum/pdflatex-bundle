@@ -1,27 +1,13 @@
 <?php
 
-/**
- * This file is part of cyberspectrum/pdflatex-bundle.
- *
- * (c) CyberSpectrum <http://www.cyberspectrum.de/>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * This project is provided in good faith and hope to be usable by anyone.
- *
- * @package    cyberspectrum/pdflatex-bundle
- * @author     Christian Schiffler <c.schiffler@cyberspectrum.de>
- * @copyright  2017 CyberSpectrum <http://www.cyberspectrum.de/>
- * @license    LGPL https://github.com/cyberspectrum/pdflatex-bundle/blob/master/LICENSE
- * @filesource
- */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace CyberSpectrum\PdfLatexBundle\Test\PdfLatex;
 
 use CyberSpectrum\PdfLatexBundle\PdfLatex\Executor;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactoryInterface;
+use CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorInterface;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\File\FileInterface;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\Job;
 use CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor;
@@ -34,33 +20,25 @@ use PHPUnit\Framework\TestCase;
  */
 class JobProcessorTest extends TestCase
 {
-    /**
-     * Test that the class can be instantiated.
-     *
-     * @return void
-     */
-    public function testCanBeInstantiated()
+    /** Test that the class can be instantiated. */
+    public function testCanBeInstantiated(): void
     {
         $this->assertInstanceOf(
             'CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor',
             new JobProcessor(
-                $this->getMockBuilder(ExecutorFactory::class)->disableOriginalConstructor()->getMock(),
+                $this->getMockBuilder(ExecutorFactoryInterface::class)->disableOriginalConstructor()->getMock(),
                 '/working/base/dir'
             )
         );
     }
 
-    /**
-     * Test the processing of a job.
-     *
-     * @return void
-     */
-    public function testProcessing()
+    /** Test the processing of a job. */
+    public function testProcessing(): void
     {
         $executor = $this
-            ->getMockBuilder(Executor::class)
+            ->getMockBuilder(ExecutorInterface::class)
             ->disableOriginalConstructor()
-            ->setMethods(['run'])
+            ->onlyMethods(['run'])
             ->getMock();
 
         $executor
@@ -70,9 +48,9 @@ class JobProcessorTest extends TestCase
             ->willReturn('/working/base/dir/jobdir/foo.pdf');
 
         $factory = $this
-            ->getMockBuilder(ExecutorFactory::class)
+            ->getMockBuilder(ExecutorFactoryInterface::class)
             ->disableOriginalConstructor()
-            ->setMethods(['createExecutor'])
+            ->onlyMethods(['createExecutor'])
             ->getMock();
 
         $factory
@@ -98,12 +76,12 @@ class JobProcessorTest extends TestCase
      * Mock a file.
      *
      * @param string $fileName The file name.
-     * @param string $subDir   The sub directory.
+     * @param string $subDir   The subdirectory.
      * @param string $saveDir  The destination directory.
      *
      * @return FileInterface
      */
-    private function mockFile($fileName, $subDir, $saveDir): FileInterface
+    private function mockFile(string $fileName, string $subDir, string $saveDir): FileInterface
     {
         $mock = $this->getMockForAbstractClass(FileInterface::class);
         $mock->method('getName')->willReturn($fileName);

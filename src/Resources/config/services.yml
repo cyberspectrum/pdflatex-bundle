@@ -1,25 +1,21 @@
 services:
-    cyberspectrum.pdflatex.executor_factory:
-        class: CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory
+    CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory:
         arguments:
-            - "%cyberspectrum.pdflatex.binary%"
+            $latexBinary: null
         public: false
 
-    cyberspectrum.pdflatex.processor:
-        class: CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor
+    CyberSpectrum\PdfLatexBundle\PdfLatex\JobProcessor:
         arguments:
-            - "@cyberspectrum.pdflatex.executor_factory"
-            - "%kernel.cache_dir%/pdflatex"
+            $executorFactory: '@CyberSpectrum\PdfLatexBundle\PdfLatex\ExecutorFactory'
+            $tempDirectory: null
         public: true
 
-    cyberspectrum.pdflatex.twig.extension:
-        class: CyberSpectrum\PdfLatexBundle\Twig\Extension
+    CyberSpectrum\PdfLatexBundle\Twig\Extension:
         tags:
             - { name: twig.extension }
         public: false
 
-    cyberspectrum.pdflatex.twig.file_extension_escaping_strategy:
-        class: CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy
+    CyberSpectrum\PdfLatexBundle\Twig\FileExtensionEscapingStrategy:
         arguments:
-            - false
+            $defaultStrategy: false
         public: false
