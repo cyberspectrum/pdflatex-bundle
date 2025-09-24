@@ -47,6 +47,7 @@ phpcq:
     - 9093F8B32E4815AA
     # PHP_CodeSniffer
     - A978220305CD5C32
+    - 97B02DD8E5071466
     # Composer normalize
     - C00543248C87FB13
 
