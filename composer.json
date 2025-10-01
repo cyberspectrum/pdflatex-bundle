@@ -34,7 +34,7 @@
   "require-dev": {
     "phpcq/runner-bootstrap": "^1.0@dev",
     "symfony/phpunit-bridge": "^7.3.4",
-    "symfony/twig-bundle": "^7.3.2",
+    "symfony/twig-bundle": "^7.3.4",
     "twig/twig": "^3.19"
   },
   "autoload": {
