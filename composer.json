@@ -35,7 +35,7 @@
     "phpcq/runner-bootstrap": "^1.0@dev",
     "symfony/phpunit-bridge": "^7.3.4",
     "symfony/twig-bundle": "^7.3.4",
-    "twig/twig": "^3.19"
+    "twig/twig": "^3.22"
   },
   "autoload": {
     "psr-4": {
