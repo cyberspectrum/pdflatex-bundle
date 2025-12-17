@@ -37,20 +37,24 @@ class CyberSpectrumPdfLatexBundleTest extends TestCase
 
         $container = $this
             ->getMockBuilder(ContainerBuilder::class)
-            ->setMethods(['addCompilerPass'])
+            ->onlyMethods(['addCompilerPass'])
             ->getMock();
 
         $container
             ->expects($this->exactly(2))
-            ->method('addCompilerPass')->willReturnOnConsecutiveCalls(
-                $this->returnCallback(function ($pass) use ($container) {
-                    $this->assertInstanceOf(SetAutoescapePass::class, $pass);
+            ->method('addCompilerPass')->willReturnCallback(
+                function ($pass) use ($container) {
+                    static $invocation = 0;
+                    self::assertInstanceOf(
+                        match ($invocation++) {
+                            0 => SetAutoescapePass::class,
+                            1 => AddEscaperPass::class,
+                            default => throw new \LogicException('Was not expected to be called again.'),
+                        },
+                        $pass
+                    );
                     return $container;
-                }),
-                $this->returnCallback(function ($pass) use ($container) {
-                    $this->assertInstanceOf(AddEscaperPass::class, $pass);
-                    return $container;
-                })
+                }
             );
 
         $bundle->build($container);
