@@ -50,6 +50,8 @@ phpcq:
     - 97B02DD8E5071466
     # Composer normalize
     - C00543248C87FB13
+    # phpcq
+    - 6659B17090D6C5D3
 
 tasks:
   fix:
