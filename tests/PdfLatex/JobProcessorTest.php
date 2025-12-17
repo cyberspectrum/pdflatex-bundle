@@ -83,7 +83,7 @@ class JobProcessorTest extends TestCase
      */
     private function mockFile(string $fileName, string $subDir, string $saveDir): FileInterface
     {
-        $mock = $this->getMockForAbstractClass(FileInterface::class);
+        $mock = $this->getMockBuilder(FileInterface::class)->getMock();
         $mock->method('getName')->willReturn($fileName);
         $mock->method('getDirectory')->willReturn($subDir);
         $mock->expects($this->once())->method('saveTo')->with($saveDir);

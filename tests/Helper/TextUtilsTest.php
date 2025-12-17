@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CyberSpectrum\PdfLatexBundle\Test\Helper;
 
 use CyberSpectrum\PdfLatexBundle\Helper\TextUtils;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 class TextUtilsTest extends TestCase
 {
     /** Provide datasets for the parseText test. */
-    public function textParsingProvider(): array
+    public static function textParsingProvider(): array
     {
         return [
             'decode named entity' => [
@@ -46,9 +47,8 @@ class TextUtilsTest extends TestCase
      *
      * @param string $expected The expected result.
      * @param string $input    The input string.
-     *
-     * @dataProvider textParsingProvider
      */
+    #[DataProvider('textParsingProvider')]
     public function testTextParsing(string $expected, string $input): void
     {
         $utils = new TextUtils();

@@ -28,7 +28,7 @@ class JobTest extends TestCase
     /** Test that the class can be instantiated. */
     public function testInstantiationThrowsExceptionForNonTexFile(): void
     {
-        $mock = $this->getMockForAbstractClass(FileInterface::class);
+        $mock = $this->getMockBuilder(FileInterface::class)->getMock();
         $mock->method('getName')->willReturn('foo.bar');
 
         $this->expectException('File foo.bar does not have file extension ".tex"');
@@ -87,7 +87,7 @@ class JobTest extends TestCase
     /** Mock a .tex file. */
     private function mockTexFile(): FileInterface
     {
-        $mock = $this->getMockForAbstractClass(FileInterface::class);
+        $mock = $this->getMockBuilder(FileInterface::class)->getMock();
         $mock->method('getName')->willReturn('foo.tex');
 
         return $mock;

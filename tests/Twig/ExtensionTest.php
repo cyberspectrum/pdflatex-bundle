@@ -7,6 +7,7 @@ namespace CyberSpectrum\PdfLatexBundle\Test\Twig;
 use CyberSpectrum\PdfLatexBundle\Helper\TextUtils;
 use CyberSpectrum\PdfLatexBundle\Helper\TextUtilsInterface;
 use CyberSpectrum\PdfLatexBundle\Twig\Extension;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -47,7 +48,7 @@ class ExtensionTest extends TestCase
     }
 
     /** Data provider for the filter tests. */
-    public function filterTestProvider(): iterable
+    public static function filterTestProvider(): iterable
     {
         return [
             'Should escape umlauts' => [
@@ -80,11 +81,10 @@ class ExtensionTest extends TestCase
      * @param string $template The template content.
      * @param array  $context  The context.
      *
-     * @dataProvider filterTestProvider
-     *
      * @covers \CyberSpectrum\PdfLatexBundle\Twig\Extension::texify
      * @covers \CyberSpectrum\PdfLatexBundle\Twig\Extension::texifyAll
      */
+    #[DataProvider('filterTestProvider')]
     public function testFilter(string $expected, string $template, array $context): void
     {
         $twig = new Environment(new ArrayLoader(['template.tex.twig' => $template]), ['autoescape' => 'tex']);

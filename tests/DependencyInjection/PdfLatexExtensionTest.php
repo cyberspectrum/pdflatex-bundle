@@ -60,17 +60,20 @@ class PdfLatexExtensionTest extends TestCase
             ->getMock();
 
         $factory = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
-        $factory->expects(self::once())->method('setArgument')->with('$latexBinary', '/bin/false');
+        $factory->expects($this->once())->method('setArgument')->with('$latexBinary', '/bin/false');
         $processor = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
-        $processor->expects(self::once())->method('setArgument')->with('$tempDirectory', '/tmp/path');
+        $processor->expects($this->once())->method('setArgument')->with('$tempDirectory', '/tmp/path');
 
         $container
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getDefinition')
-            ->will(self::returnValueMap([
-                [ExecutorFactory::class, $factory],
-                [JobProcessor::class, $processor],
-            ]));
+            ->willReturnCallback(
+                fn (string $idValue) => match ($idValue) {
+                    ExecutorFactory::class => $factory,
+                    JobProcessor::class => $processor,
+                    default => null,
+                }
+            );
 
         $extension = new PdfLatexExtension();
         $extension->load([['pdflatex_binary' => '/bin/false', 'cache_dir' => '/tmp/path']], $container);
@@ -88,22 +91,25 @@ class PdfLatexExtensionTest extends TestCase
 
         $factory = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
         $factory
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setArgument')
             ->with('$latexBinary', $dir . '/pdflatex');
         $processor = $this->getMockBuilder(Definition::class)->onlyMethods(['setArgument'])->getMock();
         $processor
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('setArgument')
             ->with('$tempDirectory', '%kernel.cache_dir%/pdflatex');
 
         $container
-            ->expects(self::exactly(2))
+            ->expects($this->exactly(2))
             ->method('getDefinition')
-            ->will(self::returnValueMap([
-                [ExecutorFactory::class, $factory],
-                [JobProcessor::class, $processor],
-            ]));
+            ->willReturnCallback(
+                fn (string $idValue) => match ($idValue) {
+                    ExecutorFactory::class => $factory,
+                    JobProcessor::class => $processor,
+                    default => null,
+                }
+            );
 
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
@@ -120,11 +126,11 @@ class PdfLatexExtensionTest extends TestCase
         putenv('PATH=');
 
         $container
-            ->expects(self::never())
+            ->expects($this->never())
             ->method('getDefinition');
 
-        self::expectException(RuntimeException::class);
-        self::expectExceptionMessage('Could not find a pdflatex binary.');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Could not find a pdflatex binary.');
 
         $extension = new PdfLatexExtension();
         $extension->load([], $container);
