@@ -28,7 +28,7 @@
     "symfony/filesystem": "^7.3.6",
     "symfony/http-foundation": "^7.3.7",
     "symfony/http-kernel": "^7.3.7",
-    "symfony/process": "^6.4 || ^7.2",
+    "symfony/process": "^7.3.11",
     "symfony/yaml": "^7.3.5"
   },
   "require-dev": {
